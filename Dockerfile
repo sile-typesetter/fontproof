@@ -2,7 +2,7 @@
 
 ARG SILETAG
 
-FROM docker.io/siletypesetter/sile:$SILETAG AS fontproof
+FROM ghcr.io/sile-typesetter/sile:$SILETAG AS fontproof
 
 # This is a hack to convince Docker Hub that its cache is behind the times.
 # This happens when the contents of our dependencies changes but the base
