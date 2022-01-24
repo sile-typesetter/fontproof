@@ -14,5 +14,5 @@ docker build \
 	--build-arg SILETAG="$SILETAG" \
 	--build-arg VCS_REF="${1:-$DESC}" \
 	--build-arg RUNTIME_DEPS="$RUNTIME_DEPS" \
-	--tag $IMAGE_NAME \
+	--tag $DOCKER_REPO:$DOCKER_TAG \
 	./
