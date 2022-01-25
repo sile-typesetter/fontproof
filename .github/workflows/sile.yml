@@ -21,8 +21,10 @@ jobs:
       run: pacman --noconfirm -S words
     - name: Run test template
       run: sile fpTest.sil
-    - name: Run gutenberg template
-      run: sile fpGutenberg.sil
+#   Disabled because luasocket is acting up on Lua 5.4.3 and producing false failures
+#   https://github.com/diegonehab/luasocket/issues/331
+#   - name: Run gutenberg template
+#     run: sile fpGutenberg.sil
     - name: Run unichar template
       run: sile fpUnichar.sil
     - name: Run full template
