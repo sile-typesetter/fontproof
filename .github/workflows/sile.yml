@@ -8,7 +8,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sileVersion: ["v0.10.11", "v0.10.13", "v0.10.15"]
+        # oldest tested, newest patch rel of each minor bump since
+        sileVersion: ["v0.10.11", "v0.10.15", "v0.11.1", "v0.12.1"]
     runs-on: ubuntu-latest
     container:
       image: docker://siletypesetter/sile:${{ matrix.sileVersion }}
@@ -20,8 +21,10 @@ jobs:
       run: pacman --noconfirm -S words
     - name: Run test template
       run: sile fpTest.sil
-    - name: Run gutenberg template
-      run: sile fpGutenberg.sil
+#   Disabled because luasocket is acting up on Lua 5.4.3 and producing false failures
+#   https://github.com/diegonehab/luasocket/issues/331
+#   - name: Run gutenberg template
+#     run: sile fpGutenberg.sil
     - name: Run unichar template
       run: sile fpUnichar.sil
     - name: Run full template
