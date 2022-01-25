@@ -51,7 +51,7 @@ Then use the `-e` parameter on the sile command to set the `fontfile` parameter,
 
     $ sile -e 'fontfile = "font.ttf"' test.sil
 
-For this to work you must have a `\setTestFont` command in your SILE file, even if only to set an initial size. Without that command any font specified on the command line will be ignored. Also - if you set the font name or filename in the SILE file it will _always_ override anything you try to set on the command line. 
+For this to work you must have a `\setTestFont` command in your SILE file, even if only to set an initial size. Without that command any font specified on the command line will be ignored. Also - if you set the font name or filename in the SILE file it will _always_ override anything you try to set on the command line.
 
 _(Note: In earlier versions of fontproof this was `-f` or `-p`, however this a slightly more awkward but more robust way to do it.)_
 
@@ -59,8 +59,8 @@ At this point there is one main template - _fpFull.sil_ - but more will follow. 
 
 ## Docker usage
 
-As an alternative method to install and use FontProof, a [Docker image](https://hub.docker.com/repository/docker/siletypesetter/fontproof) is avalable with SILE and the *fontproof* class baked in and ready for use.
-Released versions are tagged to match (e.g. `v1.3.4`), the latest release will be tagged `latest`, and a `master` tag is also available with the freshest development build.
+As an alternative method to use FontProof, Docker images are available from [Docker Hub](https://hub.docker.com/repository/docker/siletypesetter/fontproof) or the [GitHub Container Registry](https://github.com/sile-typesetter/fontproof/pkgs/container/fontproof%2Ffontproof) with SILE and the *fontproof* class baked in and ready for use.
+Released versions are tagged to match (e.g. `v1.5.1`), the latest release will be tagged `latest`, and a `master` tag is also available with the freshest development build.
 In order to be useful you need to tell the Docker run command a way to reach your source documents (and hence also to give it a place to write the output) as well as tell it who you are on the host machine so the output generated inside the container can be created with the expected ownership properties.
 You may find it easiest to run with an alias like this:
 
