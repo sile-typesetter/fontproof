@@ -83,25 +83,16 @@ jobs:
     name: FontProof
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: FontProof
-        id: fontproof
-        uses: docker://siletypesetter/fontproof:latest
+        uses: sile-typesetter/fontproof@latest
         with:
           args: proofs.sil
 ```
 
 Add to your repository as `.github/workflows/fontproof.yml`.
 This work flow assumes your project has a source file `proofs.sil` and will leave behind a `proofs.pdf`.
-Note that this Actions work flow explicitly uses a container fetched from Docker Hub because this is the fastest way to get rolling, and the comments in [the section about Docker](#docker-usage) regarding tagged versions besides `latest` apply equally here.
-
-Because this repository is itself a GitHub Action you can also use the standard `uses` syntax like this:
-
-```yaml
-        uses: sile-typesetter/fontproof@latest
-```
-
-But be warned that since GitHub rebuilds containers from scratch on every such invocation, this syntax is not recommended for regular use.
+Note that the comments in [the section about Docker](#docker-usage) regarding tagged versions besides `latest` apply equally here, but GitHub Actions uses an `@` separator instead of Docker's `:`.
 
 
 ## Adding or modifying tests
