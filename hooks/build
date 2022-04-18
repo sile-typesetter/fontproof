@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 set -e
 
-: "${SILETAG:=v0.12.4}"
+: "${SILETAG:=v0.12.5}"
 
 DESC=$(git describe --long --tags --always)
 
