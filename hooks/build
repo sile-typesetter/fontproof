@@ -3,7 +3,7 @@ set -e
 
 : "${SILETAG:=v0.12.5}"
 
-DESC=$(git describe --long --tags --always)
+REVISION=$(git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g')
 
 RUNTIME_DEPS='words'
 
@@ -12,7 +12,8 @@ export DOCKER_BUILDKIT
 
 docker build \
 	--build-arg SILETAG="$SILETAG" \
-	--build-arg VCS_REF="${1:-$DESC}" \
+	--build-arg REVISION="$REVISION" \
+	--build-arg VERSION="${1:-$REVISION}" \
 	--build-arg RUNTIME_DEPS="$RUNTIME_DEPS" \
 	--tag $DOCKER_REPO:$DOCKER_TAG \
 	./
