@@ -7,7 +7,7 @@ inputs:
     default: ""
 runs:
   using: docker
-  image: docker://ghcr.io/sile-typesetter/fontproof:v1.5.3
+  image: docker://ghcr.io/sile-typesetter/fontproof:v1.5.6
   entrypoint: sh
   args:
     - -c
