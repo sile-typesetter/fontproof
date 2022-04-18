@@ -1,9 +1,11 @@
-VERSION := $(shell git describe --long --tags --always)
+SHELL = bash
+
+VERSION ?= $(shell git describe --long --tags --always)
 
 _BRANCH_REF := $(shell $(AWK) '{print ".git/" $$2}' .git/HEAD 2>/dev/null ||:)
 
 .version: $(_BRANCH_REF)
-	[ -e "$@" ] && mv "$@" "$@-prev" || touch "$@-prev"
+	[[ -e "$@" ]] && mv "$@" "$@-prev" || touch "$@-prev"
 	printf "$(VERSION)" > "$@"
 
 export DOCKER_REGISTRY ?= ghcr.io
