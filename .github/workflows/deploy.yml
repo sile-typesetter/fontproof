@@ -28,6 +28,6 @@ jobs:
         env:
           DOCKER_REGISTRY: ghcr.io
           DOCKER_REPO: ${{ github.repository }}
-          DOCKER_TAG: ${{ env.REF }}
+          DOCKER_TAG: ${{ github.ref_name }}
           DOCKER_USERNAME: ${{ github.actor }}
           DOCKER_PAT: ${{ secrets.CR_SILE_TYPESETTER }}
