@@ -1,6 +1,6 @@
 name: SILE
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
 
@@ -9,14 +9,14 @@ jobs:
       fail-fast: false
       matrix:
         # oldest tested, newest patch rel of each minor bump since
-        sileVersion: ["v0.10.11", "v0.10.15", "v0.11.1", "v0.12.4"]
+        sileVersion: [ "v0.10.11", "v0.10.15", "v0.11.1", "v0.12.5" ]
     runs-on: ubuntu-latest
     container:
       image: docker://siletypesetter/sile:${{ matrix.sileVersion }}
       options: --entrypoint=bash
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Install dictionary
       run: pacman --noconfirm -S words
     - name: Run test template
@@ -30,7 +30,7 @@ jobs:
     - name: Run full template
       run: sile fpFull.sil
     - name: Upload artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: fp-templates.zip
         path: fp*.pdf
