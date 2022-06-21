@@ -28,9 +28,17 @@ dependencies = {
 build = {
    type = "builtin",
    modules = {
-      ["sile.classes.fontproof"] = "classes/fontproof.lua",
+      ["sile.classes.fontproof"] = "classes/fontproof/init.lua",
       ["sile.packages.fontproofgroups"] = "packages/fontproofgroups.lua",
       ["sile.packages.fontprooftexts"] = "packages/fontprooftexts.lua",
       ["sile.packages.gutenberg-client"] = "packages/gutenberg-client.lua"
+   },
+   install = {
+     lua = {
+       ["fontproof.fpFull"] = "fpFull.sil",
+       ["fontproof.fpGutenberg"] = "fpGutenberg.sil",
+       ["fontproof.fpTest"] = "fpTest.sil",
+       ["fontproof.fpUnichar"] = "fpUnichar.sil"
+     }
    }
 }
