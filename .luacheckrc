@@ -11,6 +11,6 @@ exclude_files = {
 globals = {
   "SILE",
   "SU",
-  "std"
+  "pl"
 }
 max_line_length = false
