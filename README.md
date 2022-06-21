@@ -12,9 +12,9 @@ _Note that FontProof is very much a work-in-progress, so there's a lot that does
 
 FontProof requires [The SILE Typesetter](https://sile-typesetter.org/). You'll need to install [SILE](https://github.com/sile-typesetter/sile) according to that package's instructions.
 
-_Note that SILE is changing rapidly. The current class was developed for and tested with release 0.10.11 or newer._
+_Note that SILE is changing rapidly. The current class was developed for and tested with release 0.13.0 or newer._
 
-To install FontProof on SILE 0.10.11 or later, run:
+To install FontProof on SILE 0.13.0 or later, run:
 
     $ sile -e 'installPackage("fontproof");os.exit()'
 
