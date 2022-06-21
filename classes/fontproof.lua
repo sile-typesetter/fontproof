@@ -136,6 +136,8 @@ end
 
 function fontproof:registerCommands ()
 
+  plain.registerCommands(self)
+
   SILE.registerCommand("setTestFont", function (options, _)
     local testfilename = options.filename or nil
     local testfamily = options.family or nil
