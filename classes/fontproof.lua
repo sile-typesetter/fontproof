@@ -203,7 +203,7 @@ SILE.registerCommand("proof", function (options, content)
   else proof.sizes = { SILE.scratch.fontproof.testfont.size }
   end
   if options.shapers then
-    if SILE.settings:declarations["harfbuzz.subshapers"] then
+    if SILE.settings.declarations["harfbuzz.subshapers"] then
       SILE.settings:set("harfbuzz.subshapers", options.shapers)
     else SU.warn("Can't use shapers on this version of SILE; upgrade!")
     end
@@ -243,8 +243,8 @@ end)
 
 SILE.registerCommand("pattern", function(options, content)
   --SU.required(options, "reps")
-  local chars = pl.string.split(options.chars, ",")
-  local reps = pl.string.split(options.reps, ",")
+  local chars = pl.stringx.split(options.chars, ",")
+  local reps = pl.stringx.split(options.reps, ",")
   local format = options.format or "table"
   local size = options.size or SILE.scratch.fontproof.testfont.size
   local cont = processtext(content)[1]
@@ -271,7 +271,7 @@ SILE.registerCommand("pattern", function(options, content)
   end
   if format == "table" then
     if chars[2] then
-      paras = pl.string.split(cont, chars[2])
+      paras = pl.stringx.split(cont, chars[2])
     else
       table.insert(paras, cont)
     end
@@ -279,7 +279,7 @@ SILE.registerCommand("pattern", function(options, content)
     for _, c in ipairs(chars) do
       cont = string.gsub(cont, c, chars[1])
     end
-    paras = pl.string.split(cont, chars[1])
+    paras = pl.stringx.split(cont, chars[1])
   else
     table.insert(paras, cont)
   end
