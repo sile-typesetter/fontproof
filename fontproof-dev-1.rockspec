@@ -29,6 +29,7 @@ dependencies = {
 build = {
    type = "builtin",
    modules = {
+      fontproof = "src/fontproof.lua",
       ["sile.classes.fontproof"] = "classes/fontproof/init.lua",
       ["sile.packages.fontproofgroups"] = "packages/fontproofgroups.lua",
       ["sile.packages.fontprooftexts"] = "packages/fontprooftexts.lua",
@@ -36,10 +37,13 @@ build = {
    },
    install = {
      lua = {
-       ["fontproof.fpFull"] = "fpFull.sil",
-       ["fontproof.fpGutenberg"] = "fpGutenberg.sil",
-       ["fontproof.fpTest"] = "fpTest.sil",
-       ["fontproof.fpUnichar"] = "fpUnichar.sil"
+       -- ["fontproof.fpFull"] = "fpFull.sil",
+       -- ["fontproof.fpGutenberg"] = "fpGutenberg.sil",
+       -- ["fontproof.fpTest"] = "fpTest.sil",
+       -- ["fontproof.fpUnichar"] = "fpUnichar.sil"
+     },
+     bin = {
+       fontproof = "fontproof"
      }
    }
 }
