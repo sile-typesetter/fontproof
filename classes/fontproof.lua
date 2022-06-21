@@ -1,7 +1,7 @@
 -- fontproof / a tool for testing fonts
 -- copyright 2016-2020 SIL International and released under the MIT/X11 license
 
-local plain = SILE.require("classes/plain")
+local plain = require("classes/plain")
 local fontproof = plain { id = "fontproof" }
 
 SILE.scratch.fontproof = {}
@@ -52,8 +52,8 @@ function fontproof:init ()
   self:loadPackage("fontprooftexts")
   self:loadPackage("fontproofgroups")
   self:loadPackage("gutenberg-client")
-  SILE.settings.set("document.parindent", SILE.nodefactory.glue(0))
-  SILE.settings.set("document.spaceskip")
+  SILE.settings:set("document.parindent", SILE.nodefactory.glue(0))
+  SILE.settings:set("document.spaceskip")
   return plain.init(self)
 end
 
@@ -66,9 +66,9 @@ function fontproof:endPage ()
     runheadinfo = "Fontproof for: " .. SILE.scratch.fontproof.testfont.family .. " - Input file: " .. SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE " .. SILE.scratch.fontproof.sileversion .. " - HarfBuzz " ..  SILE.scratch.fontproof.hb
   end
   SILE.typesetNaturally(SILE.getFrame("runningHead"), function()
-    SILE.settings.set("document.rskip", SILE.nodefactory.hfillglue())
-    SILE.settings.set("typesetter.parfillskip", SILE.nodefactory.glue(0))
-    SILE.settings.set("document.spaceskip", SILE.shaper:measureChar(" ").width)
+    SILE.settings:set("document.rskip", SILE.nodefactory.hfillglue())
+    SILE.settings:set("typesetter.parfillskip", SILE.nodefactory.glue(0))
+    SILE.settings:set("document.spaceskip", SILE.shaper:measureChar(" ").width)
     SILE.call("font", {
         family = SILE.scratch.fontproof.runhead.family,
         size = SILE.scratch.fontproof.runhead.size
@@ -109,7 +109,7 @@ end)
 
 -- basic text styles
 SILE.registerCommand("basic", function (_, content)
-  SILE.settings.temporarily(function()
+  SILE.settings:temporarily(function()
     SILE.call("font", {
         filename = SILE.scratch.fontproof.testfont.filename,
         size = SILE.scratch.fontproof.testfont.size
@@ -203,15 +203,15 @@ SILE.registerCommand("proof", function (options, content)
   else proof.sizes = { SILE.scratch.fontproof.testfont.size }
   end
   if options.shapers then
-    if SILE.settings.declarations["harfbuzz.subshapers"] then
-      SILE.settings.set("harfbuzz.subshapers", options.shapers)
+    if SILE.settings:declarations["harfbuzz.subshapers"] then
+      SILE.settings:set("harfbuzz.subshapers", options.shapers)
     else SU.warn("Can't use shapers on this version of SILE; upgrade!")
     end
   end
   proof.family, proof.filename = fontsource(options.family, options.filename)
   SILE.call("color", options, function ()
     for i = 1, #proof.sizes do
-      SILE.settings.temporarily(function ()
+      SILE.settings:temporarily(function ()
         local fontoptions = {
           family = proof.family,
           filename = proof.filename,
@@ -243,8 +243,8 @@ end)
 
 SILE.registerCommand("pattern", function(options, content)
   --SU.required(options, "reps")
-  local chars = std.string.split(options.chars, ",")
-  local reps = std.string.split(options.reps, ",")
+  local chars = pl.string.split(options.chars, ",")
+  local reps = pl.string.split(options.reps, ",")
   local format = options.format or "table"
   local size = options.size or SILE.scratch.fontproof.testfont.size
   local cont = processtext(content)[1]
@@ -271,7 +271,7 @@ SILE.registerCommand("pattern", function(options, content)
   end
   if format == "table" then
     if chars[2] then
-      paras = std.string.split(cont, chars[2])
+      paras = pl.string.split(cont, chars[2])
     else
       table.insert(paras, cont)
     end
@@ -279,7 +279,7 @@ SILE.registerCommand("pattern", function(options, content)
     for _, c in ipairs(chars) do
       cont = string.gsub(cont, c, chars[1])
     end
-    paras = std.string.split(cont, chars[1])
+    paras = pl.string.split(cont, chars[1])
   else
     table.insert(paras, cont)
   end
