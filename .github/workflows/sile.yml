@@ -18,7 +18,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
     - name: Freshen runner image
-      run: pacman -Sy && pacman --noconfirm --needed -S archlinux-keyring && pacman --noconfirm -Su
+      run: pacman -Sy && pacman --noconfirm --needed -S archlinux-keyring && pacman --noconfirm -Su --ignore icu --ignore openssl
     - name: Install dev dependencies
       run: pacman --noconfirm --needed -S luarocks make words zsh
     - name: Build and install locally
