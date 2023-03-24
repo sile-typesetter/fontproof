@@ -1,0 +1,16 @@
+{
+    "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
+    "Lua.runtime.version": "LuaJIT",
+    "Lua.diagnostics.globals": [
+        "SILE",
+        "SU",
+        "luautf8",
+        "pl",
+        "fluent",
+        "_fpFilename",
+        "_fpFamily",
+        "_fpSize"
+    ],
+    "Lua.workspace.preloadFileSize": 5120,
+    "Lua.workspace.checkThirdParty": false
+}
