@@ -23,7 +23,7 @@ cliargs:option("-s, --size=VALUE", "Specify the default test font size")
 cliargs:option("-t, --template=VALUE", "Use the bundled template by name (full, gutenberg, test, unichar);")
 cliargs:flag("-h, --help", "display this help, then exit")
 cliargs:flag("-v, --version", "display version information, then exit", print_version)
-cliargs:splat("SILEARGS", "All remaining args are passed directly to SILE")
+cliargs:splat("SILEARGS", "All remaining args are passed directly to SILE", nil, 999)
 
 local opts, parse_err = cliargs:parse(_G.arg)
 if not opts and parse_err then
@@ -36,7 +36,7 @@ local size = opts.size and ("-e '_fpSize=\"%s\"'"):format(opts.size) or ""
 local template = opts.template and ("templates/%s.sil"):format(opts.template) or ""
 local family = opts.family and ("-e '_fpFamily=\"%s\"'"):format(opts.family) or ""
 local output = ("-o %s"):format(opts.output or "fontproof.pdf")
-local args = opts.SILEARGS and opts.SILEARGS or ""
+local args = opts.SILEARGS and table.concat(opts.SILEARGS, " ") or ""
 
 local _, status, signal =
    os.execute(table.concat({"sile", filename, family, size, template, output, args}, " "))
