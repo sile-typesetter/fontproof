@@ -23,7 +23,10 @@ description = {
 }
 
 dependencies = {
-   "lua >= 5.1"
+   "lua >= 5.1",
+   "lua_cliargs == 3.0-2",
+   -- "luafilesystem == 1.8.0-1",
+   "penlight == 1.13.1-1",
 }
 
 build = {
