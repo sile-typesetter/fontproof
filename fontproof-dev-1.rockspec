@@ -30,16 +30,16 @@ build = {
    type = "builtin",
    modules = {
       ["sile.classes.fontproof"] = "classes/fontproof/init.lua",
-      ["sile.packages.fontproofgroups"] = "packages/fontproofgroups.lua",
-      ["sile.packages.fontprooftexts"] = "packages/fontprooftexts.lua",
-      ["sile.packages.gutenberg-client"] = "packages/gutenberg-client.lua"
+      ["sile.packages.fontproof.groups"] = "packages/fontproof/groups.lua",
+      ["sile.packages.fontproof.texts"] = "packages/fontproof/texts.lua",
+      ["sile.packages.fontproof.gutenberg-client"] = "packages/fontproof/gutenberg-client.lua"
    },
    install = {
      lua = {
-       ["fontproof.fpFull"] = "fpFull.sil",
-       ["fontproof.fpGutenberg"] = "fpGutenberg.sil",
-       ["fontproof.fpTest"] = "fpTest.sil",
-       ["fontproof.fpUnichar"] = "fpUnichar.sil"
+       ["fontproof.templates.full"] = "templates/full.sil",
+       ["fontproof.templates.gutenberg"] = "templates/gutenberg.sil",
+       ["fontproof.templates.test"] = "templates/test.sil",
+       ["fontproof.templates.unichar"] = "templates/unichar.sil"
      },
      bin = {
        fontproof = "src/fontproof.lua"
