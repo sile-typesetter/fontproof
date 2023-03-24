@@ -3,6 +3,13 @@
 
 local cliargs = require("cliargs")
 
+local print_version = function()
+   os.execute("sile --version")
+   local _, loader = pcall(require, "luarocks.loader")
+   print("FontProof installed from rockspec " .. loader.context.fontproof)
+   os.exit(0)
+end
+
 cliargs:set_name("fontproof")
 cliargs:set_description([[
     FontProof enables you to produce PDF font test documents without fiddling with InDesign or other manual page layout
@@ -15,6 +22,7 @@ cliargs:option("-o, --output=FILE", "output file name")
 cliargs:option("-s, --size=VALUE", "Specify the default test font size")
 cliargs:option("-t, --template=VALUE", "Use the bundled template by name (full, gutenberg, test, unichar);")
 cliargs:flag("-h, --help", "display this help, then exit")
+cliargs:flag("-v, --version", "display version information, then exit", print_version)
 cliargs:splat("SILEARGS", "All remaining args are passed directly to SILE")
 
 local opts, parse_err = cliargs:parse(_G.arg)

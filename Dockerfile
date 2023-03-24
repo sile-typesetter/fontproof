@@ -27,7 +27,7 @@ ARG VERSION
 # Install fontproof in SILE container
 COPY ./ /src
 WORKDIR /src
-RUN luarocks install
+RUN luarocks make fontproof-dev-1.rockspec
 
 LABEL org.opencontainers.image.title="FontProof"
 LABEL org.opencontainers.image.description="A containerized version of FontProof"
