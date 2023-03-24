@@ -20,10 +20,10 @@ if not opts and parse_err then
    os.exit(1)
 end
 
-local filename = opts.filename and ("-e _pfFilename='%s'"):format(opts.filename) or ""
-local size = opts.size and ("-e _pfSize='%s'"):format(opts.size) or ""
+local filename = opts.filename and ("-e '_fpFilename=\"%s\"'"):format(opts.filename) or ""
+local size = opts.size and ("-e '_fpSize=\"%s\"'"):format(opts.size) or ""
 local template = opts.template and ("templates/%s.sil"):format(opts.template) or ""
-local family = opts.family and ("-e _pfFamily='%s'"):format(opts.family) or ""
+local family = opts.family and ("-e '_fpFamily=\"%s\"'"):format(opts.family) or ""
 local output = ("-o %s"):format(opts.output or "fontproof.pdf")
 local args = opts.SILEARGS and opts.SILEARGS or ""
 

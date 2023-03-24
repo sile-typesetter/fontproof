@@ -84,9 +84,9 @@ function class:_init (options)
   }
 
   -- luacheck: ignore _fpFilename _fpFamily _fpSize
-  _scratch.testfont.filename = options.filename and options.filename or _fpFilename and _fpFilename or nil
-  _scratch.testfont.family = options.family and options.family or _fpFamily and _fpFamily or "Gentium Plus"
-  _scratch.testfont.size = options.size and options.size or _fpSize and _fpSize or "8pt"
+  _scratch.testfont.filename = (options.filename and options.filename) or (_fpFilename and _fpFilename) or nil
+  _scratch.testfont.family = (options.family and options.family) or (_fpFamily and _fpFamily) or "Gentium Plus"
+  _scratch.testfont.size = (options.size and options.size) or (_fpSize and _fpSize) or "8pt"
   SILE.call("font", _scratch.testfont)
 
   _scratch.runhead.family = "Gentium Plus"
