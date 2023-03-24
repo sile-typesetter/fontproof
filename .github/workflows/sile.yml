@@ -8,8 +8,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # oldest compatible, newest patch rel of each minor bump since
-        sileVersion: [ "v0.13.1" ]
+        # Test oldest compatible release plus newest patch of each minor bump since
+        sileVersion: [ "v0.13.0", "v0.13.3" ]
     runs-on: ubuntu-latest
     container:
       image: docker://siletypesetter/sile:${{ matrix.sileVersion }}
