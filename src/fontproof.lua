@@ -3,7 +3,7 @@
 
 local cliargs = require("cliargs")
 
-local print_version = function()
+local print_version = function ()
    os.execute("sile --version")
    local _, loader = pcall(require, "luarocks.loader")
    print("FontProof installed from rockspec " .. loader.context.fontproof)
@@ -26,9 +26,11 @@ cliargs:flag("-v, --version", "display version information, then exit", print_ve
 cliargs:splat("SILEARGS", "All remaining args are passed directly to SILE", nil, 999)
 
 local opts, parse_err = cliargs:parse(_G.arg)
+
 if not opts and parse_err then
    print(parse_err)
-   os.exit(1)
+   local code = parse_err:match("^Usage:") and 0 or 1
+   os.exit(code)
 end
 
 local filename = opts.filename and ("-e '_fpFilename=\"%s\"'"):format(opts.filename) or ""
