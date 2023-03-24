@@ -13,6 +13,7 @@ FROM ghcr.io/sile-typesetter/sile:$SILETAG AS fontproof
 ARG DOCKER_HUB_CACHE=0
 
 ARG RUNTIME_DEPS
+
 # Freshen all base system packages
 RUN pacman --needed --noconfirm -Syuq && yes | pacman -Sccq
 
