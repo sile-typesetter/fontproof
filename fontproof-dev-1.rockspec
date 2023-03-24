@@ -5,7 +5,7 @@ version = "dev-1"
 
 source = {
    url = "git+https://github.com/sile-typesetter/fontproof.git",
-   tag = "master"
+   branch = "master"
 }
 
 description = {

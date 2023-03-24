@@ -13,6 +13,8 @@ SEMVER != git describe --tags | sed 's/^v//;s/-.*//'
 ROCKREV = 1
 TAG ?= v$(SEMVER)
 
+LUAROCKS_ARGS ?= --local --tree lua_modules
+
 DEV_SPEC = $(PACKAGE)-dev-$(ROCKREV).rockspec
 DEV_ROCK = $(PACKAGE)-dev-$(ROCKREV).src.rock
 REL_SPEC = rockspecs/$(PACKAGE)-$(SEMVER)-$(ROCKREV).rockspec
@@ -27,24 +29,30 @@ rockspecs: $(DEV_SPEC) $(REL_SPEC)
 .PHONY: dist
 dist: $(DEV_ROCK) $(REL_ROCK)
 
+.PHONY: install
+install: $(DEV_SPEC)
+	luarocks $(LUAROCKS_ARGS) make $(DEV_SPEC)
+
 define rockpec_template =
-	sed -e "s/@SEMVER@/$(SEMVER)/g" \
+	sed -e "s/@PACKAGE@/$(PACKAGE)/g" \
+		-e "s/@SEMVER@/$(SEMVER)/g" \
 		-e "s/@ROCKREV@/$(ROCKREV)/g" \
 		-e "s/@TAG@/$(TAG)/g" \
 		$< > $@
 endef
 
-$(PACKAGE)-dev-%.rockspec: SEMVER = dev
-$(PACKAGE)-dev-%.rockspec: TAG = master
-$(PACKAGE)-dev-%.rockspec: $(PACKAGE).rockspec.in
+$(DEV_SPEC): SEMVER = dev
+$(DEV_SPEC): TAG = master
+$(DEV_SPEC): $(PACKAGE).rockspec.in
 	$(rockpec_template)
 	sed -i \
-		"1i -- DO NOT EDIT! Modify template $< and rebuild with \`make $@\`" \
+		-e "1i -- DO NOT EDIT! Modify template $< and rebuild with \`make $@\`" \
+		-e '/tag =/s/tag/branch/' \
 		$@
 
-rockspecs/$(PACKAGE)-%.rockspec: SEMVER = $*
-rockspecs/$(PACKAGE)-%.rockspec: TAG = v$*
-rockspecs/$(PACKAGE)-%.rockspec: $(PACKAGE).rockspec.in
+rockspecs/$(PACKAGE)-%-$(ROCKREV).rockspec: SEMVER = $*
+rockspecs/$(PACKAGE)-%-$(ROCKREV).rockspec: TAG = v$*
+rockspecs/$(PACKAGE)-%-$(ROCKREV).rockspec: $(PACKAGE).rockspec.in
 	$(rockpec_template)
 	sed -i \
 		-e '/rockspec_format/s/3.0/1.0/' \
@@ -54,11 +62,11 @@ rockspecs/$(PACKAGE)-%.rockspec: $(PACKAGE).rockspec.in
 		-e '/labels/d' \
 		$@
 
-$(PACKAGE)-%.src.rock: $(DEV_SPEC)
-	luarocks pack $<
+$(DEV_ROCK): $(DEV_SPEC)
+	luarocks $(LUAROCKS_ARGS) pack $<
 
 $(PACKAGE)-%.src.rock: rockspecs/$(PACKAGE)-%.rockspec
-	luarocks pack $<
+	luarocks $(LUAROCKS_ARGS) pack $<
 
 _BRANCH_REF != $(AWK) '{print ".git/" $$2}' .git/HEAD 2>/dev/null ||:
 
