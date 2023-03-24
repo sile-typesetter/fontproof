@@ -1,10 +1,12 @@
-SILE.scratch.fontproof.groups = {}
+local groups = {}
 
 -- basics
-SILE.scratch.fontproof.groups["az"] = "abcdefghijklmnopqrstuvwxyz"
-SILE.scratch.fontproof.groups["AZ"] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-SILE.scratch.fontproof.groups["combdiacs"] = "̧̨̛̣̱̀́̂̃̄̆̇̈̉̊̋̌ "
+groups["az"] = "abcdefghijklmnopqrstuvwxyz"
+groups["AZ"] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+groups["combdiacs"] = "̧̨̛̣̱̀́̂̃̄̆̇̈̉̊̋̌ "
 
 -- numerals, symbols, punctuation
-SILE.scratch.fontproof.groups["09"] = "0123456789"
-SILE.scratch.fontproof.groups["punct"] = ".,:;!¡?¿ '\"‘’‚“”„*­-–—/"
+groups["09"] = "0123456789"
+groups["punct"] = ".,:;!¡?¿ '\"‘’‚“”„*­-–—/"
+
+return groups

@@ -83,9 +83,12 @@ function class:_init (options)
     groups = {}
   }
 
-  -- set defaults
-  _scratch.testfont.family = "Gentium Plus"
-  _scratch.testfont.size = "8pt"
+  -- luacheck: ignore _fpFilename _fpFamily _fpSize
+  _scratch.testfont.filename = options.filename and options.filename or _fpFilename and _fpFilename or nil
+  _scratch.testfont.family = options.family and options.family or _fpFamily and _fpFamily or "Gentium Plus"
+  _scratch.testfont.size = options.size and options.size or _fpSize and _fpSize or "8pt"
+  SILE.call("font", _scratch.testfont)
+
   _scratch.runhead.family = "Gentium Plus"
   _scratch.runhead.size = "5pt"
   _scratch.section.family = "Gentium Plus"
@@ -105,9 +108,9 @@ function class:_init (options)
   self:loadPackage("rebox")
   self:loadPackage("features")
   self:loadPackage("color")
-  self:loadPackage("fontprooftexts")
-  self:loadPackage("fontproofgroups")
-  self:loadPackage("gutenberg-client")
+  _scratch.texts = require("packages.fontproof.texts")
+  _scratch.groups = require("packages.fontproof.groups")
+  -- self:loadPackage("fontproof.gutenberg-client")
 
   SILE.settings:set("document.parindent", SILE.nodefactory.glue(0))
   SILE.settings:set("document.spaceskip")
@@ -141,26 +144,8 @@ function class:registerCommands ()
   plain.registerCommands(self)
 
   self:registerCommand("setTestFont", function (options, _)
-    local testfilename = options.filename or nil
-    local testfamily = options.family or nil
-    if options.size then
-      _scratch.testfont.size = options.size
-    end
-    if testfilename == nil then
-      -- NOTE: fontfile is a variable that can only be set on the command line (see docs)
-      -- See also https://github.com/sile-typesetter/sile/issues/722
-      -- luacheck: ignore fontfile
-      testfilename = fontfile
-    end
-    if testfamily then
-      _scratch.testfont.family = testfamily
-    else
-      _scratch.testfont.filename = testfilename
-    end
-    options.family = testfamily
-    options.filename = testfilename
-    options.size = _scratch.testfont.size
-    SILE.call("font", options, {})
+    _scratch.testfont = options
+    SILE.call("font", options)
   end)
 
   -- optional way to override defaults

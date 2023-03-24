@@ -26,6 +26,7 @@ dependencies = {
    "lua_cliargs == 3.0-2",
    -- "luafilesystem == 1.8.0-1",
    "penlight == 1.13.1-1",
+  -- "loadkit == 1.1.0-1",
 }
 
 build = {
@@ -38,10 +39,10 @@ build = {
    },
    install = {
      lua = {
-       ["fontproof.templates.full"] = "templates/full.sil",
-       ["fontproof.templates.gutenberg"] = "templates/gutenberg.sil",
-       ["fontproof.templates.test"] = "templates/test.sil",
-       ["fontproof.templates.unichar"] = "templates/unichar.sil"
+       ["sile.packages.fontproof.templates.full"] = "templates/full.sil",
+       ["sile.packages.fontproof.templates.gutenberg"] = "templates/gutenberg.sil",
+       ["sile.packages.fontproof.templates.test"] = "templates/test.sil",
+       ["sile.packages.fontproof.templates.unichar"] = "templates/unichar.sil"
      },
      bin = {
        fontproof = "src/fontproof.lua"
