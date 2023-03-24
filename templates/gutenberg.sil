@@ -1,3 +1,6 @@
+% Copyright (C) 2016-2023 SIL International
+% SPDX-License-Identifier: MIT
+
 \begin[class=fontproof]{document}
 \set[parameter=document.parskip,value=12pt plus 2pt minus 2pt]
 \gutenberg[id=32549]

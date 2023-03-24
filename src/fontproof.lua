@@ -1,3 +1,6 @@
+-- Copyright (C) 2016-2023 SIL International
+-- SPDX-License-Identifier: MIT
+
 local cliargs = require("cliargs")
 
 cliargs:set_name("fontproof")

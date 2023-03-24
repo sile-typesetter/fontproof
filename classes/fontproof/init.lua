@@ -1,5 +1,5 @@
--- fontproof / a tool for testing fonts
--- copyright 2016-2020 SIL International and released under the MIT/X11 license
+-- Copyright (C) 2016-2023 SIL International
+-- SPDX-License-Identifier: MIT
 
 local plain = require("classes.plain")
 local class = pl.class(plain)
