@@ -1,10 +1,13 @@
-# FontProof - a font design testing class for SILE
+[![Luacheck Lint Status](https://img.shields.io/github/actions/workflow/status/sile-typesetter/fontproof/luacheck.yml?branch=master&label=Luacheck&logo=Lua)](https://github.com/sile-typesetter/fontproof/actions?workflow=Luacheck)
+[![SILE Render Status](https://img.shields.io/github/actions/workflow/status/sile-typesetter/fontproof/sile.yml?branch=master,label=SILE&logo=Github)](https://github.com/sile-typesetter/fontproof/actions?workflow=SILE)
+[![Docker Build Status](https://img.shields.io/github/actions/workflow/status/sile-typesetter/fontproof/deploy.yml?branch=master&label=Docker%20Build&logo=Docker)](https://github.com/sile-typesetter/fontproof/pkgs/container/fontproof)
 
-[![Luacheck Lint Status](https://img.shields.io/github/workflow/status/sile-typesetter/fontproof/Luacheck?label=Luacheck&logo=Github)](https://github.com/sile-typesetter/fontproof/actions?workflow=Luacheck)
-[![SILE Render Status](https://img.shields.io/github/workflow/status/sile-typesetter/fontproof/SILE?label=SILE&logo=Github)](https://github.com/sile-typesetter/fontproof/actions?workflow=SILE)
-[![Docker Build Status](https://img.shields.io/docker/cloud/build/siletypesetter/fontproof?label=Docker%20Build&logo=Docker)](https://hub.docker.com/repository/docker/siletypesetter/fontproof/builds)
+# FontProof
 
-FontProof enables you to produce PDF font test documents without fiddling with InDesign or other manual page layout or word processing programs. You can apply one of the predesigned test documents (to be added later) or use FontProof to build your own custom font test document.
+A font design testing class for SILE.
+
+FontProof enables you to produce PDF font test documents without fiddling with InDesign or other manual page layout or word processing programs.
+You can apply one of the predesigned test documents (to be added later) or use FontProof to build your own custom font test document.
 
 _Note that FontProof is very much a work-in-progress, so there's a lot that doesn't work yet, or doesn't work very elegantly. Use at your own risk, and help us make it better._
 
