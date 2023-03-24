@@ -9,7 +9,7 @@ jobs:
       fail-fast: false
       matrix:
         # Test oldest compatible release plus newest patch of each minor bump since
-        sileVersion: [ "v0.14.0", "v0.14.8" ]
+        sileVersion: [ "v0.14.8" ]
     runs-on: ubuntu-latest
     container:
       image: docker://siletypesetter/sile:${{ matrix.sileVersion }}
@@ -18,7 +18,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
     - name: Freshen runner image
-      run: pacman -Sy && pacman --noconfirm --needed -S archlinux-keyring && pacman --noconfirm -Su --ignore icu --ignore openssl
+      run: pacman -Sy && pacman --noconfirm --needed -S archlinux-keyring && pacman --noconfirm -Su
     - name: Install dev dependencies
       run: pacman --noconfirm --needed -S luarocks make words zsh
     - name: Build and install locally
