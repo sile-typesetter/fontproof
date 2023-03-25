@@ -8,10 +8,8 @@ inputs:
 runs:
   using: docker
   image: docker://ghcr.io/sile-typesetter/fontproof:v1.6.2
-  entrypoint: sh
   args:
-    - -c
-    - sile ${{ inputs.args }}
+    - ${{ inputs.args }}
 branding:
   icon: book-open
   color: blue

@@ -22,7 +22,7 @@ jobs:
       - name: Fetch tags
         run: |
           git fetch --prune --tags ||:
-      - name: Publish Docker Image to GH Pakcages
+      - name: Publish Docker Image to GH Container Registry
         run: |
           make docker-build-push
         env:

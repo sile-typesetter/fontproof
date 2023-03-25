@@ -1,11 +1,13 @@
--- fontproof / a tool for testing fonts
--- copyright 2016-2020 SIL International and released under the MIT/X11 license
+-- Copyright (C) 2016-2023 SIL International
+-- SPDX-License-Identifier: MIT
 
-local plain = require("classes/plain")
-local fontproof = pl.class(plain)
-fontproof._name = "fontproof"
+local plain = require("classes.plain")
+local class = pl.class(plain)
+class._name = "fontproof"
 
-fontproof.defaultFrameset = {
+local _scratch = SILE.scratch.fontproof
+
+class.defaultFrameset = {
   content = {
     left = "8%pw",
     right = "92%pw",
@@ -29,11 +31,11 @@ local function fontsource (fam, file)
   elseif fam then
     family = fam
     filename = nil
-  elseif SILE.scratch.fontproof.testfont.filename then
-    filename = SILE.scratch.fontproof.testfont.filename
+  elseif _scratch.testfont.filename then
+    filename = _scratch.testfont.filename
     family = nil
   else
-    family = SILE.scratch.fontproof.testfont.family
+    family = _scratch.testfont.family
     filename = nil
   end
   return family, filename
@@ -53,8 +55,8 @@ local function processtext (str)
   local temp = str[1]
   if string.sub(temp, 1, 5) == "text_" then
     local textname = string.sub(temp, 6)
-    if SILE.scratch.fontproof.texts[textname] ~= nil then
-      newstr[1] = SILE.scratch.fontproof.texts[textname].text
+    if _scratch.texts[textname] ~= nil then
+      newstr[1] = _scratch.texts[textname].text
     end
   end
   return newstr
@@ -71,9 +73,9 @@ local hasGlyph = function (g)
   return false
 end
 
-function fontproof:_init (options)
+function class:_init (options)
 
-  SILE.scratch.fontproof = {
+  _scratch = {
     runhead = {},
     section = {},
     subsection = {},
@@ -81,19 +83,22 @@ function fontproof:_init (options)
     groups = {}
   }
 
-  -- set defaults
-  SILE.scratch.fontproof.testfont.family = "Gentium Plus"
-  SILE.scratch.fontproof.testfont.size = "8pt"
-  SILE.scratch.fontproof.runhead.family = "Gentium Plus"
-  SILE.scratch.fontproof.runhead.size = "5pt"
-  SILE.scratch.fontproof.section.family = "Gentium Plus"
-  SILE.scratch.fontproof.section.size = "12pt"
-  SILE.scratch.fontproof.subsection.family = "Gentium Plus"
-  SILE.scratch.fontproof.subsection.size = "12pt"
-  SILE.scratch.fontproof.sileversion = SILE.version
+  -- luacheck: ignore _fpFilename _fpFamily _fpSize
+  _scratch.testfont.filename = (options.filename and options.filename) or (_fpFilename and _fpFilename) or nil
+  _scratch.testfont.family = (options.family and options.family) or (_fpFamily and _fpFamily) or "Gentium Plus"
+  _scratch.testfont.size = (options.size and options.size) or (_fpSize and _fpSize) or "8pt"
+  SILE.call("font", _scratch.testfont)
+
+  _scratch.runhead.family = "Gentium Plus"
+  _scratch.runhead.size = "5pt"
+  _scratch.section.family = "Gentium Plus"
+  _scratch.section.size = "12pt"
+  _scratch.subsection.family = "Gentium Plus"
+  _scratch.subsection.size = "12pt"
+  _scratch.sileversion = SILE.version
 
   local hb = require("justenoughharfbuzz")
-  SILE.scratch.fontproof.hb = hb.version()
+  _scratch.hb = hb.version()
 
   plain._init(self, options)
 
@@ -103,9 +108,9 @@ function fontproof:_init (options)
   self:loadPackage("rebox")
   self:loadPackage("features")
   self:loadPackage("color")
-  self:loadPackage("fontprooftexts")
-  self:loadPackage("fontproofgroups")
-  self:loadPackage("gutenberg-client")
+  _scratch.texts = require("packages.fontproof.texts")
+  _scratch.groups = require("packages.fontproof.groups")
+  -- self:loadPackage("fontproof.gutenberg-client")
 
   SILE.settings:set("document.parindent", SILE.nodefactory.glue(0))
   SILE.settings:set("document.spaceskip")
@@ -113,78 +118,60 @@ function fontproof:_init (options)
 
 end
 
-function fontproof:endPage ()
+function class:endPage ()
   SILE.call("nofolios")
   local runheadinfo
-  if SILE.scratch.fontproof.testfont.filename then
-    runheadinfo = "Fontproof for: " .. SILE.scratch.fontproof.testfont.filename .. " - Input file: " ..  SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE " .. SILE.scratch.fontproof.sileversion .. " - HarfBuzz " ..  SILE.scratch.fontproof.hb
+  if _scratch.testfont.filename then
+    runheadinfo = "Fontproof for: " .. _scratch.testfont.filename .. " - Input file: " ..  SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE " .. _scratch.sileversion .. " - HarfBuzz " ..  _scratch.hb
   else
-    runheadinfo = "Fontproof for: " .. SILE.scratch.fontproof.testfont.family .. " - Input file: " .. SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE " .. SILE.scratch.fontproof.sileversion .. " - HarfBuzz " ..  SILE.scratch.fontproof.hb
+    runheadinfo = "Fontproof for: " .. _scratch.testfont.family .. " - Input file: " .. SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE " .. _scratch.sileversion .. " - HarfBuzz " ..  _scratch.hb
   end
   SILE.typesetNaturally(SILE.getFrame("runningHead"), function()
     SILE.settings:set("document.rskip", SILE.nodefactory.hfillglue())
     SILE.settings:set("typesetter.parfillskip", SILE.nodefactory.glue(0))
     SILE.settings:set("document.spaceskip", SILE.shaper:measureChar(" ").width)
     SILE.call("font", {
-        family = SILE.scratch.fontproof.runhead.family,
-        size = SILE.scratch.fontproof.runhead.size
+        family = _scratch.runhead.family,
+        size = _scratch.runhead.size
       }, { runheadinfo })
     SILE.call("par")
   end)
   return plain.endPage(self)
 end
 
-function fontproof:registerCommands ()
+function class:registerCommands ()
 
   plain.registerCommands(self)
 
-  SILE.registerCommand("setTestFont", function (options, _)
-    local testfilename = options.filename or nil
-    local testfamily = options.family or nil
-    if options.size then
-      SILE.scratch.fontproof.testfont.size = options.size
-    end
-    if testfilename == nil then
-      -- NOTE: fontfile is a variable that can only be set on the command line (see docs)
-      -- See also https://github.com/sile-typesetter/sile/issues/722
-      -- luacheck: ignore fontfile
-      testfilename = fontfile
-    end
-    if testfamily then
-      SILE.scratch.fontproof.testfont.family = testfamily
-    else
-      SILE.scratch.fontproof.testfont.filename = testfilename
-    end
-    options.family = testfamily
-    options.filename = testfilename
-    options.size = SILE.scratch.fontproof.testfont.size
-    SILE.call("font", options, {})
+  self:registerCommand("setTestFont", function (options, _)
+    _scratch.testfont = options
+    SILE.call("font", options)
   end)
 
   -- optional way to override defaults
-  SILE.registerCommand("setRunHeadStyle", function (options, _)
-    SILE.scratch.fontproof.runhead.family = options.family
-    SILE.scratch.fontproof.runhead.size = options.size or "8pt"
+  self:registerCommand("setRunHeadStyle", function (options, _)
+    _scratch.runhead.family = options.family
+    _scratch.runhead.size = options.size or "8pt"
   end)
 
   -- basic text styles
-  SILE.registerCommand("basic", function (_, content)
+  self:registerCommand("basic", function (_, content)
     SILE.settings:temporarily(function()
       SILE.call("font", {
-          filename = SILE.scratch.fontproof.testfont.filename,
-          size = SILE.scratch.fontproof.testfont.size
+          filename = _scratch.testfont.filename,
+          size = _scratch.testfont.size
         }, function () SILE.call("raggedright", {}, content) end)
     end)
   end)
 
-  SILE.registerCommand("section", function (_, content)
+  self:registerCommand("section", function (_, content)
     SILE.typesetter:leaveHmode()
     SILE.call("goodbreak")
     SILE.call("bigskip")
     SILE.call("noindent")
     SILE.call("font", {
-        family = SILE.scratch.fontproof.section.family,
-        size = SILE.scratch.fontproof.section.size
+        family = _scratch.section.family,
+        size = _scratch.section.size
       }, function () SILE.call("raggedright", {}, content) end)
     SILE.call("novbreak")
     SILE.call("medskip")
@@ -192,14 +179,14 @@ function fontproof:registerCommands ()
     SILE.typesetter:inhibitLeading()
   end)
 
-  SILE.registerCommand("subsection", function (_, content)
+  self:registerCommand("subsection", function (_, content)
     SILE.typesetter:leaveHmode()
     SILE.call("goodbreak")
     SILE.call("bigskip")
     SILE.call("noindent")
     SILE.call("font", {
-        family = SILE.scratch.fontproof.subsection.family,
-        size = SILE.scratch.fontproof.subsection.size
+        family = _scratch.subsection.family,
+        size = _scratch.subsection.size
       }, function () SILE.call("raggedright", {}, content) end)
     SILE.call("novbreak")
     SILE.call("medskip")
@@ -208,7 +195,7 @@ function fontproof:registerCommands ()
   end)
 
   -- special tests
-  SILE.registerCommand("proof", function (options, content)
+  self:registerCommand("proof", function (options, content)
     local proof = {}
     local procontent = processtext(content)
     if options.type ~= "pattern" then
@@ -220,7 +207,7 @@ function fontproof:registerCommands ()
     end
     if options.size then
       proof.sizes = sizesplit(options.size)
-    else proof.sizes = { SILE.scratch.fontproof.testfont.size }
+    else proof.sizes = { _scratch.testfont.size }
     end
     if options.shapers then
       if SILE.settings.declarations["harfbuzz.subshapers"] then
@@ -261,12 +248,12 @@ function fontproof:registerCommands ()
     end)
   end)
 
-  SILE.registerCommand("pattern", function(options, content)
+  self:registerCommand("pattern", function(options, content)
     --SU.required(options, "reps")
     local chars = pl.stringx.split(options.chars, ",")
     local reps = pl.stringx.split(options.reps, ",")
     local format = options.format or "table"
-    local size = options.size or SILE.scratch.fontproof.testfont.size
+    local size = options.size or _scratch.testfont.size
     local cont = processtext(content)[1]
     local paras = {}
     if options.heading then SILE.call("subsection", {}, { options.heading })
@@ -277,7 +264,7 @@ function fontproof:registerCommands ()
       local gitems
       if string.sub(group, 1, 6) == "group_" then
         local groupname = string.sub(group, 7)
-        gitems = SU.splitUtf8(SILE.scratch.fontproof.groups[groupname])
+        gitems = SU.splitUtf8(_scratch.groups[groupname])
       else
         gitems = SU.splitUtf8(group)
       end
@@ -311,10 +298,10 @@ function fontproof:registerCommands ()
     end
   end)
 
-  SILE.registerCommand("patterngroup", function(options, content)
+  self:registerCommand("patterngroup", function(options, content)
     SU.required(options, "name")
     local group = content[1]
-    SILE.scratch.fontproof.groups[options.name] = group
+    _scratch.groups[options.name] = group
   end)
 
   -- Try and find a dictionary
@@ -328,7 +315,7 @@ function fontproof:registerCommands ()
     return tbl
   end
 
-  SILE.registerCommand("adhesion", function(options, _)
+  self:registerCommand("adhesion", function(options, _)
     local chars = SU.required(options, "characters")
     local f
     if #dict == 0 then
@@ -363,7 +350,7 @@ function fontproof:registerCommands ()
     SILE.typesetter:typeset(table.concat(words, " ")..".")
   end)
 
-  SILE.registerCommand("pi", function (options, _)
+  self:registerCommand("pi", function (options, _)
     local digits = tonumber(options.digits) or 100
     digits = digits + 4 -- to match previous behaviour
     local pi = "3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450284102701938521105559644622948954930381964428810975665933446128475648233786783165271201909145648566923460348610454326648213393607260249141273724587006606315588174881520920962829254091715364367892590360011330530548820466521384146951941511609433057270365759591953092186117381932611793105118548074462379962749567351885752724891227938183011949129833673362440656643086021394946395224737190702179860943702770539217176293176752384674818467669405132000568127145263560827785771342757789609173637178721468440901224953430146549585371050792279689258923542019956112129021960864034418159813629774771309960518707211349999998372978049951059731732816096318595024459455346908302642522308253344685035261931188171010003137838752886587533208381420617177669147303598253490428755468731159562863882353787593751957781857780532171226806613001927876611195909216420198938095257201065485863278865936153381827968230301952035301852968995773622599413891249721775283479131515574857242454150695950829533116861727855889075098381754637464939319255060400927701671139009848824012858361603563707660104710181942955596198946767837449448255379774726847104047534646208046684259069491293313677028989152104752162056966024058038150193511253382430035587640247496473263914199272604269922796782354781636009341721641219924586315030286182974555706749838505494588586926995690927210797509302955321165344987202755960236480665499119881834797753566369807426542527862551818417574672890977772793800081647060016145249192173217214772350141441973568548161361157352552133475741849468438523323907394143334547762416862518983569485562099219222184272550254256887671790494601653466804988627232791786085784383827967976681454100953883786360950680064225125205117392984896084128488626945604241965285022210661186306744278622039194945047123713786960956364371917287467764657573962413890865832645995813390478027590099465764078951269468398352595709825822"
@@ -374,7 +361,7 @@ function fontproof:registerCommands ()
     end
   end)
 
-  SILE.registerCommand("unicharchart", function (options, _)
+  self:registerCommand("unicharchart", function (options, _)
     local type = options.type or "all"
     local showheader = SU.boolean(options.showheader, true)
     local rows = tonumber(options.rows) or 16
@@ -485,4 +472,4 @@ function fontproof:registerCommands ()
 
 end
 
-return fontproof
+return class

@@ -1,11 +1,11 @@
 #!/usr/bin/env sh
 set -e
 
-: "${SILETAG:=v0.13.3}"
+: "${SILETAG:=v0.14.8}"
 
 REVISION=$(git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g')
 
-RUNTIME_DEPS='words'
+RUNTIME_DEPS='luarocks words'
 
 : "${DOCKER_BUILDKIT:=1}"
 export DOCKER_BUILDKIT

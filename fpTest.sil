@@ -1,7 +1,0 @@
-\begin[class=fontproof]{document}
-\setTestFont[family="Gentium Plus"]
-% Simple test file for the fontproof package for SILE
-
-Welcome to FontProof!
-
-\end{document}
