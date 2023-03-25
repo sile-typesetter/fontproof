@@ -20,7 +20,7 @@ jobs:
     - name: Freshen runner image
       run: pacman -Sy && pacman --noconfirm --needed -S archlinux-keyring && pacman --noconfirm -Su
     - name: Install dev dependencies
-      run: pacman --noconfirm --needed -S luarocks make words zsh
+      run: pacman --noconfirm --needed -S luarocks make words
     - name: Build and install locally
       run: make install
     - name: Run test template

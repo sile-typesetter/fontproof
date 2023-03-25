@@ -1,7 +1,7 @@
 PACKAGE = fontproof
 
-SHELL := zsh
-.SHELLFLAGS := +o nomatch -e -c
+SHELL := bash
+.SHELLFLAGS := -e -c
 
 .ONESHELL:
 .SECONDEXPANSION:
