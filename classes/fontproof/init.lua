@@ -1,6 +1,8 @@
 -- Copyright (C) 2016-2023 SIL International
 -- SPDX-License-Identifier: MIT
 
+local hb = require("justenoughharfbuzz")
+
 local plain = require("classes.plain")
 local class = pl.class(plain)
 class._name = "fontproof"
@@ -83,10 +85,11 @@ function class:_init (options)
     groups = {}
   }
 
-  -- luacheck: ignore _fpFilename _fpFamily _fpSize
+  -- luacheck: ignore _fpFilename _fpFamily _fpSize _fpFeatures
   _scratch.testfont.filename = (options.filename and options.filename) or (_fpFilename and _fpFilename) or nil
   _scratch.testfont.family = (options.family and options.family) or (_fpFamily and _fpFamily) or "Gentium Plus"
   _scratch.testfont.size = (options.size and options.size) or (_fpSize and _fpSize) or "8pt"
+  _scratch.testfont.features = (options.features and options.features) or (_fpFeatures and _fpFeatures) or nil
   SILE.call("font", _scratch.testfont)
 
   _scratch.runhead.family = "Gentium Plus"
@@ -95,10 +98,6 @@ function class:_init (options)
   _scratch.section.size = "12pt"
   _scratch.subsection.family = "Gentium Plus"
   _scratch.subsection.size = "12pt"
-  _scratch.sileversion = SILE.version
-
-  local hb = require("justenoughharfbuzz")
-  _scratch.hb = hb.version()
 
   plain._init(self, options)
 
@@ -120,12 +119,17 @@ end
 
 function class:endPage ()
   SILE.call("nofolios")
-  local runheadinfo
+  local fontinfo
   if _scratch.testfont.filename then
-    runheadinfo = "Fontproof for: " .. _scratch.testfont.filename .. " - Input file: " ..  SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE " .. _scratch.sileversion .. " - HarfBuzz " ..  _scratch.hb
+    fontinfo = ("Font file: %s %s"):format(_scratch.testfont.filename, _scratch.testfont.features)
   else
-    runheadinfo = "Fontproof for: " .. _scratch.testfont.family .. " - Input file: " .. SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE " .. _scratch.sileversion .. " - HarfBuzz " ..  _scratch.hb
+    fontinfo = ("Font family: %s %s"):format(_scratch.testfont.family, _scratch.testfont.features)
   end
+  local templateinfo = ("Template file: %s.sil"):format(SILE.masterFilename)
+  local dateinfo = os.date("%A %d %b %Y %X %z %Z")
+  local sileinfo = ("SILE %s"):format(SILE.version)
+  local harfbuzzinfo = ("HarfBuzz %s"):format(hb.version())
+  local runheadinfo = ("Fontproof for: %s - %s - %s - %s - %s"):format(fontinfo, templateinfo, dateinfo, sileinfo, harfbuzzinfo)
   SILE.typesetNaturally(SILE.getFrame("runningHead"), function()
     SILE.settings:set("document.rskip", SILE.nodefactory.hfillglue())
     SILE.settings:set("typesetter.parfillskip", SILE.nodefactory.glue(0))
@@ -144,8 +148,8 @@ function class:registerCommands ()
   plain.registerCommands(self)
 
   self:registerCommand("setTestFont", function (options, _)
-    _scratch.testfont = options
-    SILE.call("font", options)
+    _scratch.testfont = pl.tablex.merge(options, _scratch.testfont, true)
+    SILE.call("font", _scratch.testfont)
   end)
 
   -- optional way to override defaults
