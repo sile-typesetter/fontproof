@@ -25,10 +25,8 @@ jobs:
       run: make install
     - name: Run test template
       run: ./lua_modules/bin/fontproof -t test -o test.pdf
-#   Disabled because luasocket is acting up on Lua 5.4.3 and producing false failures
-#   https://github.com/diegonehab/luasocket/issues/331
-#   - name: Run gutenberg template
-#     run: ./lua_modules/bin/fontproof -t gutenberg -o gutenberg.pdf
+    - name: Run gutenberg template
+      run: ./lua_modules/bin/fontproof -t gutenberg -o gutenberg.pdf
     - name: Run unichar template
       run: ./lua_modules/bin/fontproof -t unichar -o unichar.pdf
     - name: Run full template
