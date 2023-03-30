@@ -147,7 +147,7 @@ function class:registerCommands ()
   plain.registerCommands(self)
 
   self:registerCommand("setTestFont", function (options, _)
-    _scratch.testfont = options
+    _scratch.testfont = pl.tablex.merge(_scratch.testfont, options, true)
     SILE.call("font", options)
   end)
 
