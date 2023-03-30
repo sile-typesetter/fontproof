@@ -19,7 +19,8 @@ cliargs:set_description([[
 cliargs:option("-f, --filename=VALUE", "Specify the font to be tested as a path to a font file")
 cliargs:option("-F, --family=VALUE", "Specify the font to be tested as a family name")
 cliargs:option("-o, --output=FILE", "output file name")
-cliargs:option("-s, --size=VALUE", "Specify the default test font size")
+cliargs:option("-p, --features=VALUE", "Specify the test font features")
+cliargs:option("-s, --size=VALUE", "Specify the test font size")
 cliargs:option("-t, --template=VALUE", "Use the bundled template by name (full, gutenberg, test, unichar);")
 cliargs:flag("-h, --help", "display this help, then exit")
 cliargs:flag("-v, --version", "display version information, then exit", print_version)
@@ -38,10 +39,11 @@ local size = opts.size and ("-e '_fpSize=\"%s\"'"):format(opts.size) or ""
 local template = opts.template and ("templates/%s.sil"):format(opts.template) or ""
 local family = opts.family and ("-e '_fpFamily=\"%s\"'"):format(opts.family) or ""
 local output = ("-o %s"):format(opts.output or "fontproof.pdf")
+local features = opts.features and ("-e '_fpFeatures=\"%s\"'"):format(opts.features) or ""
 local args = opts.SILEARGS and table.concat(opts.SILEARGS, " ") or ""
 
 local _, status, signal =
-   os.execute(table.concat({"sile", filename, family, size, template, output, args}, " "))
+   os.execute(table.concat({"sile", filename, family, size, features, template, output, args}, " "))
 
 if status == "exit" then
    os.exit(signal)

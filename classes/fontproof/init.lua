@@ -85,10 +85,11 @@ function class:_init (options)
     groups = {}
   }
 
-  -- luacheck: ignore _fpFilename _fpFamily _fpSize
+  -- luacheck: ignore _fpFilename _fpFamily _fpSize _fpFeatures
   _scratch.testfont.filename = (options.filename and options.filename) or (_fpFilename and _fpFilename) or nil
   _scratch.testfont.family = (options.family and options.family) or (_fpFamily and _fpFamily) or "Gentium Plus"
   _scratch.testfont.size = (options.size and options.size) or (_fpSize and _fpSize) or "8pt"
+  _scratch.testfont.features = (options.features and options.features) or (_fpFeatures and _fpFeatures) or nil
   SILE.call("font", _scratch.testfont)
 
   _scratch.runhead.family = "Gentium Plus"
@@ -120,9 +121,9 @@ function class:endPage ()
   SILE.call("nofolios")
   local fontinfo
   if _scratch.testfont.filename then
-    fontinfo = ("Font file: %s"):format(_scratch.testfont.filename)
+    fontinfo = ("Font file: %s %s"):format(_scratch.testfont.filename, _scratch.testfont.features)
   else
-    fontinfo = ("Font family: %s"):format(_scratch.testfont.family)
+    fontinfo = ("Font family: %s %s"):format(_scratch.testfont.family, _scratch.testfont.features)
   end
   local templateinfo = ("Template file: %s.sil"):format(SILE.masterFilename)
   local dateinfo = os.date("%A %d %b %Y %X %z %Z")
@@ -147,8 +148,8 @@ function class:registerCommands ()
   plain.registerCommands(self)
 
   self:registerCommand("setTestFont", function (options, _)
-    _scratch.testfont = pl.tablex.merge(_scratch.testfont, options, true)
-    SILE.call("font", options)
+    _scratch.testfont = pl.tablex.merge(options, _scratch.testfont, true)
+    SILE.call("font", _scratch.testfont)
   end)
 
   -- optional way to override defaults
