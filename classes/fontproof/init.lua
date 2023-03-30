@@ -24,34 +24,12 @@ class.defaultFrameset = {
   }
 }
 
-local function sizesplit (str)
-  local sizes = {}
-  for s in string.gmatch(str, "%w+") do
-    if not string.find(s, "%a") then s = s .. "pt" end
-    table.insert(sizes, s)
-  end
-  return sizes
-end
-
-local function processtext (str)
-  local newstr = str
-  local temp = str[1]
-  if string.sub(temp, 1, 5) == "text_" then
-    local textname = string.sub(temp, 6)
-    if _scratch.texts[textname] ~= nil then
-      newstr[1] = _scratch.texts[textname].text
-    end
-  end
-  return newstr
-end
-
 function class:_init (options)
 
   _scratch = {
     runhead = {},
     section = {},
     subsection = {},
-    groups = {}
   }
 
   _scratch.runhead.family = "Gentium Plus"
@@ -70,8 +48,6 @@ function class:_init (options)
   self:loadPackage("rebox")
   self:loadPackage("features")
   self:loadPackage("color")
-  _scratch.texts = require("packages.fontproof.texts")
-  _scratch.groups = require("packages.fontproof.groups")
   -- self:loadPackage("fontproof.gutenberg-client")
 
   SILE.settings:set("document.parindent", SILE.nodefactory.glue(0))
@@ -189,134 +165,6 @@ function class:registerCommands ()
     SILE.call("medskip")
     SILE.call("novbreak")
     SILE.typesetter:inhibitLeading()
-  end)
-
-  local function fontsource (fam, file)
-    local family, filename
-    if file then
-      family = nil
-      filename = file
-    elseif fam then
-      family = fam
-      filename = nil
-    elseif self.options.filename then
-      filename = self.options.filename
-      family = nil
-    else
-      family = self.options.family
-      filename = nil
-    end
-    return family, filename
-  end
-
-  -- special tests
-  self:registerCommand("proof", function (options, content)
-    local proof = {}
-    local procontent = processtext(content)
-    if options.type ~= "pattern" then
-      if options.heading then
-        SILE.call("subsection", {}, { options.heading })
-      else
-        SILE.call("bigskip")
-      end
-    end
-    if options.size then
-      proof.sizes = sizesplit(options.size)
-    else proof.sizes = { self.options.size }
-    end
-    if options.shapers then
-      if SILE.settings.declarations["harfbuzz.subshapers"] then
-        SILE.settings:set("harfbuzz.subshapers", options.shapers)
-      else SU.warn("Can't use shapers on this version of SILE; upgrade!")
-      end
-    end
-    proof.family, proof.filename = fontsource(options.family, options.filename)
-    SILE.call("color", options, function ()
-      for i = 1, #proof.sizes do
-        SILE.settings:temporarily(function ()
-          local fontoptions = {
-            family = proof.family,
-            filename = proof.filename,
-            size = proof.sizes[i]
-          }
-          -- Pass on some options from \proof to \font.
-          local tocopy = { "language"; "direction"; "script" }
-          for j = 1, #tocopy do
-            if options[tocopy[j]] then fontoptions[tocopy[j]] = options[tocopy[j]] end
-          end
-          -- Add feature options
-          if options.featuresraw then fontoptions.features = options.featuresraw end
-          if options.features then
-            for j in SU.gtoke(options.features, ",") do
-              if j.string then
-                local feat = {}
-                local _, _, k, v = j.string:find("(%w+)=(.*)")
-                feat[k] = v
-                SILE.call("add-font-feature", feat, {})
-              end
-            end
-          end
-          SILE.call("font", fontoptions, {})
-          SILE.call("raggedright", {}, procontent)
-        end)
-      end
-    end)
-  end)
-
-  self:registerCommand("pattern", function(options, content)
-    --SU.required(options, "reps")
-    local chars = pl.stringx.split(options.chars, ",")
-    local reps = pl.stringx.split(options.reps, ",")
-    local format = options.format or "table"
-    local size = options.size or self.options.size
-    local cont = processtext(content)[1]
-    local paras = {}
-    if options.heading then SILE.call("subsection", {}, { options.heading })
-    else SILE.call("bigskip")
-    end
-    for i, _ in ipairs(chars) do
-      local char, group = chars[i], reps[i]
-      local gitems
-      if string.sub(group, 1, 6) == "group_" then
-        local groupname = string.sub(group, 7)
-        gitems = SU.splitUtf8(_scratch.groups[groupname])
-      else
-        gitems = SU.splitUtf8(group)
-      end
-      local newcont = ""
-      for r = 1, #gitems do
-        if gitems[r] == "%" then gitems[r] = "%%" end
-        local newstr = string.gsub(cont, char, gitems[r])
-        newcont = newcont .. char .. newstr
-      end
-      cont = newcont
-    end
-    if format == "table" then
-      if chars[2] then
-        paras = pl.stringx.split(cont, chars[2])
-      else
-        table.insert(paras, cont)
-      end
-    elseif format == "list" then
-      for _, c in ipairs(chars) do
-        cont = string.gsub(cont, c, chars[1])
-      end
-      paras = pl.stringx.split(cont, chars[1])
-    else
-      table.insert(paras, cont)
-    end
-    for _, para in ipairs(paras) do
-      for _, c in ipairs(chars) do
-        para = string.gsub(para, c, " ")
-      end
-      SILE.call("proof", { size = size, type = "pattern" }, { para })
-    end
-  end)
-
-  self:registerCommand("patterngroup", function(options, content)
-    SU.required(options, "name")
-    local group = content[1]
-    _scratch.groups[options.name] = group
   end)
 
 end

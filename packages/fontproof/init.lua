@@ -6,6 +6,9 @@ local base = require("packages.base")
 local package = pl.class(base)
 package._name = "fontproof"
 
+local texts = require("packages.fontproof.texts")
+local groups = require("packages.fontproof.groups")
+
 -- Try and find a dictionary
 local dict = {}
 
@@ -31,12 +34,33 @@ local function preload_dict (dictfile)
   end
 end
 
+local function processtext (str)
+  local newstr = str
+  local temp = str[1]
+  if string.sub(temp, 1, 5) == "text_" then
+    local textname = string.sub(temp, 6)
+    if texts[textname] ~= nil then
+      newstr[1] = texts[textname].text
+    end
+  end
+  return newstr
+end
+
 local function shuffle_in_place (tbl)
   local size = #tbl
   for i = size, 1, -1 do
     local rand = math.random(size)
     tbl[i], tbl[rand] = tbl[rand], tbl[i]
   end
+end
+
+local function sizesplit (str)
+  local sizes = {}
+  for s in string.gmatch(str, "%w+") do
+    if not string.find(s, "%a") then s = s .. "pt" end
+    table.insert(sizes, s)
+  end
+  return sizes
 end
 
 local hasGlyph = function (g)
@@ -48,6 +72,10 @@ local hasGlyph = function (g)
     end
   end
   return false
+end
+
+function package:_init (options)
+  base._init(self, options)
 end
 
 function package:registerCommands ()
@@ -69,6 +97,62 @@ function package:registerCommands ()
     SILE.typesetter:typeset(table.concat(words, " ")..".")
   end)
 
+  self:registerCommand("pattern", function(options, content)
+    --SU.required(options, "reps")
+    local chars = pl.stringx.split(options.chars, ",")
+    local reps = pl.stringx.split(options.reps, ",")
+    local format = options.format or "table"
+    local size = options.size or self.class.options.size
+    local cont = processtext(content)[1]
+    local paras = {}
+    if options.heading then SILE.call("subsection", {}, { options.heading })
+    else SILE.call("bigskip")
+    end
+    for i, _ in ipairs(chars) do
+      local char, group = chars[i], reps[i]
+      local gitems
+      if string.sub(group, 1, 6) == "group_" then
+        local groupname = string.sub(group, 7)
+        gitems = SU.splitUtf8(groups[groupname])
+      else
+        gitems = SU.splitUtf8(group)
+      end
+      local newcont = ""
+      for r = 1, #gitems do
+        if gitems[r] == "%" then gitems[r] = "%%" end
+        local newstr = string.gsub(cont, char, gitems[r])
+        newcont = newcont .. char .. newstr
+      end
+      cont = newcont
+    end
+    if format == "table" then
+      if chars[2] then
+        paras = pl.stringx.split(cont, chars[2])
+      else
+        table.insert(paras, cont)
+      end
+    elseif format == "list" then
+      for _, c in ipairs(chars) do
+        cont = string.gsub(cont, c, chars[1])
+      end
+      paras = pl.stringx.split(cont, chars[1])
+    else
+      table.insert(paras, cont)
+    end
+    for _, para in ipairs(paras) do
+      for _, c in ipairs(chars) do
+        para = string.gsub(para, c, " ")
+      end
+      SILE.call("proof", { size = size, type = "pattern" }, { para })
+    end
+  end)
+
+  self:registerCommand("patterngroup", function(options, content)
+    SU.required(options, "name")
+    local group = content[1]
+    groups[options.name] = group
+  end)
+
   self:registerCommand("pi", function (options, _)
     local digits = tonumber(options.digits) or 100
     digits = digits + 4 -- to match previous behaviour
@@ -79,6 +163,79 @@ function package:registerCommands ()
       SILE.typesetter:pushPenalty({}) -- Ugly
     end
   end)
+
+  local function fontsource (fam, file)
+    local family, filename
+    if file then
+      family = nil
+      filename = file
+    elseif fam then
+      family = fam
+      filename = nil
+    elseif self.class.options.filename then
+      filename = self.class.options.filename
+      family = nil
+    else
+      family = self.class.options.family
+      filename = nil
+    end
+    return family, filename
+  end
+
+  -- special tests
+  self:registerCommand("proof", function (options, content)
+    local proof = {}
+    local procontent = processtext(content)
+    if options.type ~= "pattern" then
+      if options.heading then
+        SILE.call("subsection", {}, { options.heading })
+      else
+        SILE.call("bigskip")
+      end
+    end
+    if options.size then
+      proof.sizes = sizesplit(options.size)
+    else proof.sizes = { self.class.options.size }
+    end
+    if options.shapers then
+      if SILE.settings.declarations["harfbuzz.subshapers"] then
+        SILE.settings:set("harfbuzz.subshapers", options.shapers)
+      else SU.warn("Can't use shapers on this version of SILE; upgrade!")
+      end
+    end
+    proof.family, proof.filename = fontsource(options.family, options.filename)
+    SILE.call("color", options, function ()
+      for i = 1, #proof.sizes do
+        SILE.settings:temporarily(function ()
+          local fontoptions = {
+            family = proof.family,
+            filename = proof.filename,
+            size = proof.sizes[i]
+          }
+          -- Pass on some options from \proof to \font.
+          local tocopy = { "language"; "direction"; "script" }
+          for j = 1, #tocopy do
+            if options[tocopy[j]] then fontoptions[tocopy[j]] = options[tocopy[j]] end
+          end
+          -- Add feature options
+          if options.featuresraw then fontoptions.features = options.featuresraw end
+          if options.features then
+            for j in SU.gtoke(options.features, ",") do
+              if j.string then
+                local feat = {}
+                local _, _, k, v = j.string:find("(%w+)=(.*)")
+                feat[k] = v
+                SILE.call("add-font-feature", feat, {})
+              end
+            end
+          end
+          SILE.call("font", fontoptions, {})
+          SILE.call("raggedright", {}, procontent)
+        end)
+      end
+    end)
+  end)
+
 
   self:registerCommand("unicharchart", function (options, _)
     local type = options.type or "all"
