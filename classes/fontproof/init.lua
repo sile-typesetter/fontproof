@@ -1,6 +1,8 @@
 -- Copyright (C) 2016-2023 SIL International
 -- SPDX-License-Identifier: MIT
 
+local hb = require("justenoughharfbuzz")
+
 local plain = require("classes.plain")
 local class = pl.class(plain)
 class._name = "fontproof"
@@ -95,10 +97,6 @@ function class:_init (options)
   _scratch.section.size = "12pt"
   _scratch.subsection.family = "Gentium Plus"
   _scratch.subsection.size = "12pt"
-  _scratch.sileversion = SILE.version
-
-  local hb = require("justenoughharfbuzz")
-  _scratch.hb = hb.version()
 
   plain._init(self, options)
 
@@ -120,12 +118,17 @@ end
 
 function class:endPage ()
   SILE.call("nofolios")
-  local runheadinfo
+  local fontinfo
   if _scratch.testfont.filename then
-    runheadinfo = "Fontproof for: " .. _scratch.testfont.filename .. " - Input file: " ..  SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE " .. _scratch.sileversion .. " - HarfBuzz " ..  _scratch.hb
+    fontinfo = ("Font file: %s"):format(_scratch.testfont.filename)
   else
-    runheadinfo = "Fontproof for: " .. _scratch.testfont.family .. " - Input file: " .. SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE " .. _scratch.sileversion .. " - HarfBuzz " ..  _scratch.hb
+    fontinfo = ("Font family: %s"):format(_scratch.testfont.family)
   end
+  local templateinfo = ("Template file: %s.sil"):format(SILE.masterFilename)
+  local dateinfo = os.date("%A %d %b %Y %X %z %Z")
+  local sileinfo = ("SILE %s"):format(SILE.version)
+  local harfbuzzinfo = ("HarfBuzz %s"):format(hb.version())
+  local runheadinfo = ("Fontproof for: %s - %s - %s - %s - %s"):format(fontinfo, templateinfo, dateinfo, sileinfo, harfbuzzinfo)
   SILE.typesetNaturally(SILE.getFrame("runningHead"), function()
     SILE.settings:set("document.rskip", SILE.nodefactory.hfillglue())
     SILE.settings:set("typesetter.parfillskip", SILE.nodefactory.glue(0))
