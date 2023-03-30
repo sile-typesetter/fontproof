@@ -8,13 +8,35 @@ package._name = "fontproof"
 
 -- Try and find a dictionary
 local dict = {}
-local function shuffle(tbl)
+
+local function preload_dict (dictfile)
+  if #dict == 0 then
+    local f
+    if dictfile then
+      f = io.open(dictfile, "r")
+    else
+      f = io.open("/usr/share/dict/words", "r")
+      if not f then
+        f = io.open("/usr/dict/words", "r")
+      end
+    end
+    if f then
+      for line in f:lines() do
+        line = line:gsub("\n", "")
+        table.insert(dict, line)
+      end
+    else
+      SU.error("Couldn't find a dictionary file to use")
+    end
+  end
+end
+
+local function shuffle_in_place (tbl)
   local size = #tbl
   for i = size, 1, -1 do
     local rand = math.random(size)
     tbl[i], tbl[rand] = tbl[rand], tbl[i]
   end
-  return tbl
 end
 
 local hasGlyph = function (g)
@@ -32,28 +54,10 @@ function package:registerCommands ()
 
   self:registerCommand("adhesion", function(options, _)
     local chars = SU.required(options, "characters")
-    local f
-    if #dict == 0 then
-      if options.dict then
-        f = io.open(options.dict, "r")
-      else
-        f = io.open("/usr/share/dict/words", "r")
-        if not f then
-          f = io.open("/usr/dict/words", "r")
-        end
-      end
-      if f then
-        for line in f:lines() do
-          line = line:gsub("\n", "")
-          table.insert(dict, line)
-        end
-      else
-        SU.error("Couldn't find a dictionary file to use")
-      end
-    end
     local wordcount = options.wordcount or 120
+    preload_dict(options.dict)
+    shuffle_in_place(dict)
     local words = {}
-    shuffle(dict)
     for _, word in ipairs(dict) do
       if wordcount == 0 then break end
       -- This is fragile. Would be better to check and escape.
