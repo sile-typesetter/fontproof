@@ -1,5 +1,5 @@
 [![Luacheck Lint Status](https://img.shields.io/github/actions/workflow/status/sile-typesetter/fontproof/luacheck.yml?branch=master&label=Luacheck&logo=Lua)](https://github.com/sile-typesetter/fontproof/actions?workflow=Luacheck)
-[![SILE Render Status](https://img.shields.io/github/actions/workflow/status/sile-typesetter/fontproof/sile.yml?branch=master,label=SILE&logo=Github)](https://github.com/sile-typesetter/fontproof/actions?workflow=SILE)
+[![SILE Render Status](https://img.shields.io/github/actions/workflow/status/sile-typesetter/fontproof/sile.yml?branch=master&label=SILE&logo=Github)](https://github.com/sile-typesetter/fontproof/actions?workflow=SILE)
 [![Docker Build Status](https://img.shields.io/github/actions/workflow/status/sile-typesetter/fontproof/deploy.yml?branch=master&label=Docker%20Build&logo=Docker)](https://github.com/sile-typesetter/fontproof/pkgs/container/fontproof)
 
 # FontProof
