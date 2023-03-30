@@ -48,7 +48,6 @@ function class:_init (options)
   self:loadPackage("rebox")
   self:loadPackage("features")
   self:loadPackage("color")
-  -- self:loadPackage("fontproof.gutenberg-client")
 
   SILE.settings:set("document.parindent", SILE.nodefactory.glue(0))
   SILE.settings:set("document.spaceskip")

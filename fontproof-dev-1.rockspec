@@ -33,7 +33,7 @@ build = {
       ["sile.classes.fontproof"] = "classes/fontproof/init.lua",
       ["sile.packages.fontproof.groups"] = "packages/fontproof/groups.lua",
       ["sile.packages.fontproof.texts"] = "packages/fontproof/texts.lua",
-      ["sile.packages.fontproof.gutenberg-client"] = "packages/fontproof/gutenberg-client.lua"
+      ["sile.packages.fontproof.gutenberg"] = "packages/fontproof/gutenberg.lua"
    },
    install = {
      lua = {
