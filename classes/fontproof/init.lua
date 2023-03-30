@@ -24,25 +24,6 @@ class.defaultFrameset = {
   }
 }
 
--- useful functions
-local function fontsource (fam, file)
-  local family, filename
-  if file then
-    family = nil
-    filename = file
-  elseif fam then
-    family = fam
-    filename = nil
-  elseif _scratch.testfont.filename then
-    filename = _scratch.testfont.filename
-    family = nil
-  else
-    family = _scratch.testfont.family
-    filename = nil
-  end
-  return family, filename
-end
-
 local function sizesplit (str)
   local sizes = {}
   for s in string.gmatch(str, "%w+") do
@@ -70,16 +51,8 @@ function class:_init (options)
     runhead = {},
     section = {},
     subsection = {},
-    testfont = {},
     groups = {}
   }
-
-  -- luacheck: ignore _fpFilename _fpFamily _fpSize _fpFeatures
-  _scratch.testfont.filename = (options.filename and options.filename) or (_fpFilename and _fpFilename) or nil
-  _scratch.testfont.family = (options.family and options.family) or (_fpFamily and _fpFamily) or "Gentium Plus"
-  _scratch.testfont.size = (options.size and options.size) or (_fpSize and _fpSize) or "8pt"
-  _scratch.testfont.features = (options.features and options.features) or (_fpFeatures and _fpFeatures) or nil
-  SILE.call("font", _scratch.testfont)
 
   _scratch.runhead.family = "Gentium Plus"
   _scratch.runhead.size = "5pt"
@@ -107,13 +80,43 @@ function class:_init (options)
 
 end
 
+function class:declareOptions ()
+  plain.declareOptions(self)
+  local filename, family, size, features
+  self:declareOption("filename", function (_, value)
+    if value then filename = value end
+    return filename
+  end)
+  self:declareOption("family", function (_, value)
+    if value then family = value end
+    return family
+  end)
+  self:declareOption("size", function (_, value)
+    if value then size = value end
+    return size
+  end)
+  self:declareOption("features", function (_, value)
+    if value then features = value end
+    return features
+  end)
+end
+
+function class:setOptions (options)
+  plain.setOptions(self, options)
+  -- luacheck: ignore _fpFilename _fpFamily _fpSize _fpFeatures
+  self.options.filename = _fpFilename or options.filename or nil
+  self.options.family = _fpFamily or options.family or "Gentium Plus"
+  self.options.size = _fpSize or options.size or "12pt"
+  self.options.features = _fpFeatures or options.features or ""
+end
+
 function class:endPage ()
   SILE.call("nofolios")
   local fontinfo
-  if _scratch.testfont.filename then
-    fontinfo = ("Font file: %s %s"):format(_scratch.testfont.filename, _scratch.testfont.features)
+  if self.options.filename then
+    fontinfo = ("Font file: %s %s"):format(self.options.filename, self.options.features)
   else
-    fontinfo = ("Font family: %s %s"):format(_scratch.testfont.family, _scratch.testfont.features)
+    fontinfo = ("Font family: %s %s"):format(self.options.family, self.options.features)
   end
   local templateinfo = ("Template file: %s.sil"):format(SILE.masterFilename)
   local dateinfo = os.date("%A %d %b %Y %X %z %Z")
@@ -138,8 +141,8 @@ function class:registerCommands ()
   plain.registerCommands(self)
 
   self:registerCommand("setTestFont", function (options, _)
-    _scratch.testfont = pl.tablex.merge(options, _scratch.testfont, true)
-    SILE.call("font", _scratch.testfont)
+    self:setOptions(options)
+    SILE.call("font", self.options)
   end)
 
   -- optional way to override defaults
@@ -152,8 +155,8 @@ function class:registerCommands ()
   self:registerCommand("basic", function (_, content)
     SILE.settings:temporarily(function()
       SILE.call("font", {
-          filename = _scratch.testfont.filename,
-          size = _scratch.testfont.size
+          filename = self.options.filename,
+          size = self.options.size
         }, function () SILE.call("raggedright", {}, content) end)
     end)
   end)
@@ -188,6 +191,24 @@ function class:registerCommands ()
     SILE.typesetter:inhibitLeading()
   end)
 
+  local function fontsource (fam, file)
+    local family, filename
+    if file then
+      family = nil
+      filename = file
+    elseif fam then
+      family = fam
+      filename = nil
+    elseif self.options.filename then
+      filename = self.options.filename
+      family = nil
+    else
+      family = self.options.family
+      filename = nil
+    end
+    return family, filename
+  end
+
   -- special tests
   self:registerCommand("proof", function (options, content)
     local proof = {}
@@ -201,7 +222,7 @@ function class:registerCommands ()
     end
     if options.size then
       proof.sizes = sizesplit(options.size)
-    else proof.sizes = { _scratch.testfont.size }
+    else proof.sizes = { self.options.size }
     end
     if options.shapers then
       if SILE.settings.declarations["harfbuzz.subshapers"] then
@@ -247,7 +268,7 @@ function class:registerCommands ()
     local chars = pl.stringx.split(options.chars, ",")
     local reps = pl.stringx.split(options.reps, ",")
     local format = options.format or "table"
-    local size = options.size or _scratch.testfont.size
+    local size = options.size or self.options.size
     local cont = processtext(content)[1]
     local paras = {}
     if options.heading then SILE.call("subsection", {}, { options.heading })
