@@ -31,9 +31,10 @@ build = {
    type = "builtin",
    modules = {
       ["sile.classes.fontproof"] = "classes/fontproof/init.lua",
+      ["sile.packages.fontproof"] = "packages/fontproof/init.lua",
       ["sile.packages.fontproof.groups"] = "packages/fontproof/groups.lua",
-      ["sile.packages.fontproof.texts"] = "packages/fontproof/texts.lua",
-      ["sile.packages.fontproof.gutenberg"] = "packages/fontproof/gutenberg.lua"
+      ["sile.packages.fontproof.gutenberg"] = "packages/fontproof/gutenberg.lua",
+      ["sile.packages.fontproof.texts"] = "packages/fontproof/texts.lua"
    },
    install = {
      lua = {
