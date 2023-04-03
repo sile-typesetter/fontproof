@@ -117,23 +117,13 @@ function class:registerCommands ()
 
   self:registerCommand("setTestFont", function (options, _)
     self:setOptions(options)
-    SILE.call("font", self.options)
+    SILE.call("font", self:_fpOptions())
   end)
 
   -- optional way to override defaults
   self:registerCommand("setRunHeadStyle", function (options, _)
     _scratch.runhead.family = options.family
     _scratch.runhead.size = options.size or "8pt"
-  end)
-
-  -- basic text styles
-  self:registerCommand("basic", function (_, content)
-    SILE.settings:temporarily(function()
-      SILE.call("font", {
-          filename = self.options.filename,
-          size = self.options.size
-        }, function () SILE.call("raggedright", {}, content) end)
-    end)
   end)
 
   self:registerCommand("section", function (_, content)
@@ -166,6 +156,19 @@ function class:registerCommands ()
     SILE.typesetter:inhibitLeading()
   end)
 
+end
+
+function class:_fpOptions (options)
+  options = options or {}
+  local opts = {}
+  if options.filename or self.options.filename then
+    opts.filename = options.filename or self.options.filename
+  else
+    opts.family = options.family or self.options.family
+  end
+  opts.size = options.size or self.options.size
+  opts.features = options.features or self.options.features
+  return opts
 end
 
 return class

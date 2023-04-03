@@ -197,7 +197,7 @@ function package:registerCommands ()
     self:registerCommand("gutenberg", function (options, _)
     SU.required(options, "id")
     local text = getGutenberg(options.id)
-    SILE.typesetter:typeset(text)
+    SILE.call("font", self.class:_fpOptions(options), { text })
   end)
 
 end

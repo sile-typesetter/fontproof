@@ -24,7 +24,7 @@ description = {
 
 dependencies = {
    "lua >= 5.1",
-   "lua_cliargs == 3.0-2",
+   "lua_cliargs == 3.0-2"
 }
 
 build = {

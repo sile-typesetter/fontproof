@@ -50,7 +50,9 @@ Here are some digits of pi: \pi[digits=500]
 
 \section{Built-in SILE commands}
 
+\begin{basic}
 \pangrams
 \lorem[words=100]
 \repertoire
+\end{basic}
 \end{document}

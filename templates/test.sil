@@ -3,4 +3,6 @@
 
 \begin[class=fontproof]{document}
 Welcome to FontProof!
+
+\basic{Set in the test font.}
 \end{document}
