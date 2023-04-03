@@ -57,7 +57,7 @@ end
 
 function class:declareOptions ()
   plain.declareOptions(self)
-  local filename, family, size, features
+  local filename, family, size, style, features, weight
   self:declareOption("filename", function (_, value)
     if value then filename = value end
     return filename
@@ -70,19 +70,29 @@ function class:declareOptions ()
     if value then size = value end
     return size
   end)
+  self:declareOption("style", function (_, value)
+    if value then style = value end
+    return style
+  end)
   self:declareOption("features", function (_, value)
     if value then features = value end
     return features
+  end)
+  self:declareOption("weight", function (_, value)
+    if value then weight = value end
+    return weight
   end)
 end
 
 function class:setOptions (options)
   plain.setOptions(self, options)
-  -- luacheck: ignore _fpFilename _fpFamily _fpSize _fpFeatures
+  -- luacheck: ignore _fpFilename _fpFamily _fpSize _fpStyle _fpFeatures _fpWeight
   self.options.filename = _fpFilename or options.filename or nil
   self.options.family = _fpFamily or options.family or "Gentium Plus"
   self.options.size = _fpSize or options.size or "12pt"
+  self.options.style = _fpStyle or options.style or nil
   self.options.features = _fpFeatures or options.features or ""
+  self.options.weight = _fpWeight or options.weight or nil
 end
 
 function class:endPage ()
@@ -91,7 +101,7 @@ function class:endPage ()
   if self.options.filename then
     fontinfo = ("Font file: %s %s"):format(self.options.filename, self.options.features)
   else
-    fontinfo = ("Font family: %s %s"):format(self.options.family, self.options.features)
+    fontinfo = ("Font family: %s %s %s %s"):format(self.options.family, self.options.style, self.options.weight, self.options.features)
   end
   local templateinfo = ("Template file: %s.sil"):format(SILE.masterFilename)
   local dateinfo = os.date("%A %d %b %Y %X %z %Z")
@@ -165,6 +175,8 @@ function class:_fpOptions (options)
     opts.filename = options.filename or self.options.filename
   else
     opts.family = options.family or self.options.family
+    opts.weight = options.weight or self.options.weight
+    opts.style = options.style or self.options.style
   end
   opts.size = options.size or self.options.size
   opts.features = options.features or self.options.features
