@@ -34,7 +34,7 @@ $ luarocks make
 ```
 ## Usage
 
-Running FontProof is done through it's own CLI:
+Running FontProof is done through its own CLI:
 
 ``` console
 $ fontproof --help

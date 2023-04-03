@@ -52,6 +52,6 @@ local _, status, signal =
 if status == "exit" then
    os.exit(signal)
 else
-   error(("Interupted with signal %s"):format(signal))
+   error(("Interrupted with signal %s"):format(signal))
    os.exit(1)
 end

@@ -17,7 +17,7 @@ ARG RUNTIME_DEPS
 # Freshen all base system packages
 RUN pacman --needed --noconfirm -Syuq && yes | pacman -Sccq
 
-# Install run-time dependecies
+# Install run-time dependencies
 RUN pacman --needed --noconfirm -Sq $RUNTIME_DEPS && yes | pacman -Sccq
 
 # Set at build time, forces Docker’s layer caching to reset at this point
