@@ -36,13 +36,15 @@ if not opts and parse_err then
    os.exit(code)
 end
 
+local templatedir = require("sile.packages.fontproof.templates.locator")()
+
 local family = opts.family and ("-e '_fpFamily=\"%s\"'"):format(opts.family) or ""
 local features = opts.features and ("-e '_fpFeatures=\"%s\"'"):format(opts.features) or ""
 local filename = opts.filename and ("-e '_fpFilename=\"%s\"'"):format(opts.filename) or ""
 local output = ("-o %s"):format(opts.output or "fontproof.pdf")
 local size = opts.size and ("-e '_fpSize=\"%s\"'"):format(opts.size) or ""
 local style = opts.style and ("-e '_fpStyle=\"%s\"'"):format(opts.style) or ""
-local template = opts.template and ("templates/%s.sil"):format(opts.template) or ""
+local template = opts.template and ("%s%s.sil"):format(templatedir, opts.template) or ""
 local weight = opts.weight and ("-e '_fpWeight=\"%s\"'"):format(opts.weight) or ""
 local args = opts.SILEARGS and table.concat(opts.SILEARGS, " ") or ""
 
