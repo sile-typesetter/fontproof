@@ -1,3 +1,11 @@
+-- Copyright (C) 2016-2023 SIL International
+-- SPDX-License-Identifier: MIT
+
+local base = require("packages.base")
+
+local package = pl.class(base)
+package._name = "fontproof.gutenberg"
+
 local json = {}
 -- Internal functions.
 
@@ -184,8 +192,14 @@ local function getGutenberg(id)
   return table.concat(lines,"")
 end
 
-SILE.registerCommand("gutenberg", function (options, _)
-  SU.required(options, "id")
-  local text = getGutenberg(options.id)
-  SILE.typesetter:typeset(text)
-end)
+function package:registerCommands ()
+
+    self:registerCommand("gutenberg", function (options, _)
+    SU.required(options, "id")
+    local text = getGutenberg(options.id)
+    SILE.call("font", self.class:_fpOptions(options), { text })
+  end)
+
+end
+
+return package

@@ -1,0 +1,8 @@
+% Copyright (C) 2016-2023 SIL International
+% SPDX-License-Identifier: MIT
+
+\begin[class=fontproof]{document}
+Welcome to FontProof!
+
+\basic{Set in the test font.}
+\end{document}

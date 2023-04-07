@@ -1,7 +1,7 @@
-\begin[class=fontproof]{document}
-\setTestFont[family="Gentium Plus"]
-% Full test file for the fontproof package for SILE
+% Copyright (C) 2016-2023 SIL International
+% SPDX-License-Identifier: MIT
 
+\begin[class=fontproof]{document}
 \section{Main section head}
 
 Text under main section head
@@ -50,8 +50,9 @@ Here are some digits of pi: \pi[digits=500]
 
 \section{Built-in SILE commands}
 
+\begin{basic}
 \pangrams
 \lorem[words=100]
 \repertoire
-
+\end{basic}
 \end{document}

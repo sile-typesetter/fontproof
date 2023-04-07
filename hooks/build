@@ -1,18 +1,19 @@
 #!/usr/bin/env sh
 set -e
 
-: "${SILETAG:=v0.10.15}"
+: "${SILETAG:=v0.14.8}"
 
-DESC=$(git describe --long --tags --always)
+REVISION=$(git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g')
 
-RUNTIME_DEPS='words'
+RUNTIME_DEPS='luarocks words'
 
 : "${DOCKER_BUILDKIT:=1}"
 export DOCKER_BUILDKIT
 
 docker build \
 	--build-arg SILETAG="$SILETAG" \
-	--build-arg VCS_REF="${1:-$DESC}" \
+	--build-arg REVISION="$REVISION" \
+	--build-arg VERSION="${1:-$REVISION}" \
 	--build-arg RUNTIME_DEPS="$RUNTIME_DEPS" \
-	--tag $IMAGE_NAME \
+	--tag $DOCKER_REPO:$DOCKER_TAG \
 	./

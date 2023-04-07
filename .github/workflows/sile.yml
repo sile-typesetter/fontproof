@@ -1,6 +1,6 @@
 name: SILE
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
 
@@ -8,26 +8,31 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sileVersion: ["v0.10.11", "v0.10.13", "v0.10.15"]
+        # Test oldest compatible release plus newest patch of each minor bump since
+        sileVersion: [ "v0.14.8" ]
     runs-on: ubuntu-latest
     container:
       image: docker://siletypesetter/sile:${{ matrix.sileVersion }}
       options: --entrypoint=bash
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
-    - name: Install dictionary
-      run: pacman --noconfirm -S words
+      uses: actions/checkout@v3
+    - name: Freshen runner image
+      run: pacman -Sy && pacman --noconfirm --needed -S archlinux-keyring && pacman --noconfirm -Su
+    - name: Install dev dependencies
+      run: pacman --noconfirm --needed -S luarocks make words
+    - name: Build and install locally
+      run: make install
     - name: Run test template
-      run: sile fpTest.sil
+      run: ./lua_modules/bin/fontproof -t test -o test.pdf
     - name: Run gutenberg template
-      run: sile fpGutenberg.sil
+      run: ./lua_modules/bin/fontproof -t gutenberg -o gutenberg.pdf
     - name: Run unichar template
-      run: sile fpUnichar.sil
+      run: ./lua_modules/bin/fontproof -t unichar -o unichar.pdf
     - name: Run full template
-      run: sile fpFull.sil
+      run: ./lua_modules/bin/fontproof -t full -o full.pdf
     - name: Upload artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
-        name: fp-templates.zip
-        path: fp*.pdf
+        name: fp-template-tests.zip
+        path: '*.pdf'

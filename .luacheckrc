@@ -1,9 +1,11 @@
-std = "lua53"
+std = "max"
 include_files = {
   "**/*.lua",
+  "*.rockspec",
   ".luacheckrc"
 }
 exclude_files = {
+  "lua_modules",
   ".lua",
   ".luarocks",
   ".install"
@@ -11,6 +13,12 @@ exclude_files = {
 globals = {
   "SILE",
   "SU",
-  "std"
+  "luautf8",
+  "pl",
+  "fluent",
+  "_fpFilename",
+  "_fpFamily",
+  "_fpSize"
 }
 max_line_length = false
+-- vim: ft=lua

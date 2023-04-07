@@ -1,0 +1,2 @@
+# Some strings in pattern tablse make Git think our code files are binary
+*.lua diff merge text
