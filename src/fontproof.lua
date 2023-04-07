@@ -47,7 +47,7 @@ local weight = opts.weight and ("-e '_fpWeight=\"%s\"'"):format(opts.weight) or 
 local args = opts.SILEARGS and table.concat(opts.SILEARGS, " ") or ""
 
 local _, status, signal =
-   os.execute(table.concat({"sile", filename, family, style, weight, size, features, template, output, args}, " "))
+   os.execute(table.concat({"sile", filename, family, style, weight, size, features, output, args, template}, " "))
 
 if status == "exit" then
    os.exit(signal)

@@ -110,7 +110,7 @@ function class:endPage ()
     fontinfo = ("Font family: %s %s %s %s"):format(self.options.family, self.options.style, self.options.weight, self.options.features)
   end
   local gitcommit = getGitCommit()
-  local templateinfo = ("Template file: %s.sil"):format(SILE.masterFilename)
+  local templateinfo = ("Template file: %s"):format(SILE.input.filename)
   local dateinfo = os.date("%A %d %b %Y %X %z %Z")
   local sileinfo = ("SILE %s"):format(SILE.version)
   local harfbuzzinfo = ("HarfBuzz %s"):format(hb.version())
