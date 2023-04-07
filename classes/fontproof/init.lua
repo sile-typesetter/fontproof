@@ -24,6 +24,13 @@ class.defaultFrameset = {
   }
 }
 
+-- If we are in a git repository, report the latest commit ID
+local function getGitCommit ()
+  local fh = io.popen("git describe --always --long --tags --abbrev=7 --dirty='*'")
+  local commit = fh:read()
+  return commit and (" [%s]"):format(commit) or ""
+end
+
 function class:_init (options)
 
   _scratch = {
@@ -103,11 +110,12 @@ function class:endPage ()
   else
     fontinfo = ("Font family: %s %s %s %s"):format(self.options.family, self.options.style, self.options.weight, self.options.features)
   end
+  local gitcommit = getGitCommit()
   local templateinfo = ("Template file: %s.sil"):format(SILE.masterFilename)
   local dateinfo = os.date("%A %d %b %Y %X %z %Z")
   local sileinfo = ("SILE %s"):format(SILE.version)
   local harfbuzzinfo = ("HarfBuzz %s"):format(hb.version())
-  local runheadinfo = ("Fontproof for: %s - %s - %s - %s - %s"):format(fontinfo, templateinfo, dateinfo, sileinfo, harfbuzzinfo)
+  local runheadinfo = ("Fontproof for: %s %s - %s - %s - %s - %s"):format(fontinfo, gitcommit, templateinfo, dateinfo, sileinfo, harfbuzzinfo)
   SILE.typesetNaturally(SILE.getFrame("runningHead"), function()
     SILE.settings:set("document.rskip", SILE.nodefactory.hfillglue())
     SILE.settings:set("typesetter.parfillskip", SILE.nodefactory.glue(0))

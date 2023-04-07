@@ -175,24 +175,6 @@ function package:registerCommands ()
     end)
   end)
 
-  local function fontsource (fam, file)
-    local family, filename
-    if file then
-      family = nil
-      filename = file
-    elseif fam then
-      family = fam
-      filename = nil
-    elseif self.class.options.filename then
-      filename = self.class.options.filename
-      family = nil
-    else
-      family = self.class.options.family
-      filename = nil
-    end
-    return family, filename
-  end
-
   -- special tests
   self:registerCommand("proof", function (options, content)
     local proof = {}
