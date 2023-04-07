@@ -24,6 +24,13 @@ class.defaultFrameset = {
   }
 }
 
+-- If we are in a git repository, report the latest commit ID
+local function getGitCommit ()
+  local fh = io.popen("git describe --always --long --tags --abbrev=7 --dirty='*'")
+  local commit = fh:read()
+  return commit and (" [%s]"):format(commit) or ""
+end
+
 function class:_init (options)
 
   _scratch = {
@@ -102,16 +109,6 @@ function class:endPage ()
     fontinfo = ("Font file: %s %s"):format(self.options.filename, self.options.features)
   else
     fontinfo = ("Font family: %s %s %s %s"):format(self.options.family, self.options.style, self.options.weight, self.options.features)
-  end
-
-  local function getGitCommit()
-    -- If we are in a git repository, report the latest commit ID
-    local fh = io.popen("git describe --always --long --tags --abbrev=7 --dirty='*'")
-  local commit = fh:read()
-  if commit then
-    return " ["..commit.."]"
-    end
-      return ""
   end
   local gitcommit = getGitCommit()
   local templateinfo = ("Template file: %s.sil"):format(SILE.masterFilename)
