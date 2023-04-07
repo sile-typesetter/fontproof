@@ -7,9 +7,12 @@
         "luautf8",
         "pl",
         "fluent",
-        "_fpFilename",
         "_fpFamily",
-        "_fpSize"
+        "_fpFeatures",
+        "_fpFilename",
+        "_fpSize",
+        "_fpStyle",
+        "_fpWeight"
     ],
     "Lua.workspace.preloadFileSize": 5120,
     "Lua.workspace.checkThirdParty": false

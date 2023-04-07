@@ -93,7 +93,6 @@ end
 
 function class:setOptions (options)
   plain.setOptions(self, options)
-  -- luacheck: ignore _fpFilename _fpFamily _fpSize _fpStyle _fpFeatures _fpWeight
   self.options.filename = _fpFilename or options.filename or nil
   self.options.family = _fpFamily or options.family or "Gentium Plus"
   self.options.size = _fpSize or options.size or "12pt"

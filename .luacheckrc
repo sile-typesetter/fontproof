@@ -16,9 +16,12 @@ globals = {
   "luautf8",
   "pl",
   "fluent",
-  "_fpFilename",
   "_fpFamily",
-  "_fpSize"
+  "_fpFeatures",
+  "_fpFilename",
+  "_fpSize",
+  "_fpStyle",
+  "_fpWeight"
 }
 max_line_length = false
 -- vim: ft=lua
