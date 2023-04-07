@@ -1,3 +1,4 @@
 lua_modules
 *.pdf
 .version*
+*.src.rock
