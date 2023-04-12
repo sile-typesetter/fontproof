@@ -33,7 +33,7 @@ dist: $(DEV_ROCK) $(REL_ROCK)
 install: $(DEV_SPEC)
 	luarocks $(LUAROCKS_ARGS) make $(DEV_SPEC)
 
-define rockpec_template =
+define rockspec_template =
 	sed -e "s/@PACKAGE@/$(PACKAGE)/g" \
 		-e "s/@SEMVER@/$(SEMVER)/g" \
 		-e "s/@ROCKREV@/$(ROCKREV)/g" \
@@ -44,7 +44,7 @@ endef
 $(DEV_SPEC): SEMVER = dev
 $(DEV_SPEC): TAG = master
 $(DEV_SPEC): $(PACKAGE).rockspec.in
-	$(rockpec_template)
+	$(rockspec_template)
 	sed -i \
 		-e "1i -- DO NOT EDIT! Modify template $< and rebuild with \`make $@\`" \
 		-e '/tag =/s/tag/branch/' \
@@ -53,7 +53,7 @@ $(DEV_SPEC): $(PACKAGE).rockspec.in
 rockspecs/$(PACKAGE)-%-$(ROCKREV).rockspec: SEMVER = $*
 rockspecs/$(PACKAGE)-%-$(ROCKREV).rockspec: TAG = v$*
 rockspecs/$(PACKAGE)-%-$(ROCKREV).rockspec: $(PACKAGE).rockspec.in
-	$(rockpec_template)
+	$(rockspec_template)
 	sed -i \
 		-e '/rockspec_format/s/3.0/1.0/' \
 		-e '/url = "git/a\   dir = "$(PACKAGE)",' \
