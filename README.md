@@ -38,20 +38,26 @@ Running FontProof is done through its own CLI:
 
 ``` console
 $ fontproof --help
-Usage: fontproof [OPTIONS] [--] [SILEARGS]
+Usage: fontproof [OPTIONS] [--] [SILEARGS-1 [SILEARGS-2 [...]]]
 
-ARGUMENTS: 
+ARGUMENTS:
   SILEARGS             All remaining args are passed directly to SILE
                        (optional)
 
-OPTIONS: 
+OPTIONS:
+  -F, --family=VALUE   Specify the font to be tested as a family name
+                       (ignored if --filename used)
   -f, --filename=VALUE Specify the font to be tested as a path to a
                        font file
-  -F, --family=VALUE   Specify the font to be tested as a family name
   -o, --output=FILE    output file name
-  -s, --size=VALUE     Specify the default test font size
+  -p, --features=VALUE Specify the test font features
+  -s, --size=VALUE     Specify the test font size
+  -S, --style=VALUE    Specify the test font style (ignored if
+                       --filename used)
   -t, --template=VALUE Use the bundled template by name (full,
                        gutenberg, test, unichar);
+  -w, --weight=VALUE   Specify the test font weight (ignored if
+                       --filename used)
   -h, --help           display this help, then exit
   -v, --version        display version information, then exit
 ```
