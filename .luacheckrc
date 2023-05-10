@@ -19,6 +19,7 @@ globals = {
   "_fpFamily",
   "_fpFeatures",
   "_fpFilename",
+  "_fpLanguage",
   "_fpSize",
   "_fpStyle",
   "_fpWeight"

@@ -64,7 +64,7 @@ end
 
 function class:declareOptions ()
   plain.declareOptions(self)
-  local filename, family, size, style, features, weight
+  local filename, family, language, size, style, features, weight
   self:declareOption("filename", function (_, value)
     if value then filename = value end
     return filename
@@ -72,6 +72,10 @@ function class:declareOptions ()
   self:declareOption("family", function (_, value)
     if value then family = value end
     return family
+  end)
+  self:declareOption("language", function (_, value)
+    if value then language = value end
+    return language
   end)
   self:declareOption("size", function (_, value)
     if value then size = value end
@@ -95,6 +99,7 @@ function class:setOptions (options)
   plain.setOptions(self, options)
   self.options.filename = _fpFilename or options.filename or nil
   self.options.family = _fpFamily or options.family or "Gentium Plus"
+  self.options.language = _fpLanguage or options.language or nil
   self.options.size = _fpSize or options.size or "12pt"
   self.options.style = _fpStyle or options.style or nil
   self.options.features = _fpFeatures or options.features or ""
@@ -108,6 +113,9 @@ function class:endPage ()
     fontinfo = ("Font file: %s %s"):format(self.options.filename, self.options.features)
   else
     fontinfo = ("Font family: %s %s %s %s"):format(self.options.family, self.options.style, self.options.weight, self.options.features)
+  end
+  if self.options.language then
+    fontinfo = fontinfo .. (" %s"):format(self.options.language)
   end
   local gitcommit = getGitCommit()
   local templateinfo = ("Template file: %s"):format(SILE.input.filename)
@@ -185,6 +193,7 @@ function class:_fpOptions (options)
     opts.weight = options.weight or self.options.weight
     opts.style = options.style or self.options.style
   end
+  opts.language = options.language or self.options.language
   opts.size = options.size or self.options.size
   opts.features = options.features or self.options.features
   return opts
