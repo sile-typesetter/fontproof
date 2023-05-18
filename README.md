@@ -72,7 +72,7 @@ Use of the specialty commands it defines is on an as-needed basis.
 For example:
 
 ``` console
-$ cp /usr/share/lua/5.4/fontproof/templates/full.sil mytemplate.sil
+$ cp /usr/local/share/lua/<version>/fontproof/templates/full.sil mytemplate.sil
 $ fontproof -- mytemplate.sil
 ```
 
@@ -138,7 +138,7 @@ More details on running commands in SILE can be found in the SILE [manual](https
 By default, the running head lists the filename, font (family or filename), date, and time. The content is not (currently) configurable, but you can set the font and size with the `\setRunHeadStyle` command. Note that this has no relation to the test font.
 
 ``` sile
-%\setRunHeadStyle[filename="packages/fontproofsupport/Lato2OFL/Lato-Bold.ttf", size="12pt"]
+%\setRunHeadStyle[filename="Example-Bold.ttf", size="12pt"]
 ```
 
 To add a section and subsection headings:
@@ -188,7 +188,7 @@ You can also set a test heading here rather than using a separate `\section` com
 
 \proof[family="Gentium Plus",heading=A basic family test]{This is basic text with a font defined by family}
 
-\proof[size="10pt",filename="packages/fontproofsupport/Lato2OFL/Lato-Light.ttf",heading=A basic filename test]{This is another basic text with common parameters}
+\proof[size="10pt",filename="Example-Light.ttf",heading=A basic filename test]{This is another basic text with common parameters}
 
 \proof[size="10pt,11pt,12pt,16pt"]{This is basic proof text in a range of sizes}
 
