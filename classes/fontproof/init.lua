@@ -110,19 +110,19 @@ function class:endPage ()
   SILE.call("nofolios")
   local fontinfo
   if self.options.filename then
-    fontinfo = ("Font file: %s %s"):format(self.options.filename, self.options.features)
+    fontinfo = ("%s %s"):format(self.options.filename, self.options.features)
   else
-    fontinfo = ("Font family: %s %s %s %s"):format(self.options.family, self.options.style, self.options.weight, self.options.features)
+    fontinfo = ("%s %s %s %s"):format(self.options.family, self.options.style, self.options.weight, self.options.features)
   end
   if self.options.language then
     fontinfo = fontinfo .. (" %s"):format(self.options.language)
   end
   local gitcommit = getGitCommit()
-  local templateinfo = ("Template file: %s"):format(SILE.input.filename)
+  local templateinfo = ("%s"):format(SILE.input.filename)
   local dateinfo = os.date("%A %d %b %Y %X %z %Z")
   local sileinfo = ("SILE %s"):format(SILE.version)
   local harfbuzzinfo = ("HarfBuzz %s"):format(hb.version())
-  local runheadinfo = ("Fontproof for: %s %s - %s - %s - %s - %s"):format(fontinfo, gitcommit, templateinfo, dateinfo, sileinfo, harfbuzzinfo)
+  local runheadinfo = ("Fontproof: %s %s - %s - %s - %s - %s"):format(fontinfo, gitcommit, templateinfo, dateinfo, sileinfo, harfbuzzinfo)
   SILE.typesetNaturally(SILE.getFrame("runningHead"), function()
     SILE.settings:set("document.rskip", SILE.nodefactory.hfillglue())
     SILE.settings:set("typesetter.parfillskip", SILE.nodefactory.glue(0))
