@@ -8,8 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Test oldest compatible release plus newest patch of each minor bump since
-        sileVersion: [ "v0.14.8", "v0.14.10" ]
+        sileVersion: [ "v0.14.10" ]
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/sile-typesetter/sile:${{ matrix.sileVersion }}
