@@ -14,9 +14,6 @@ ARG DOCKER_HUB_CACHE=0
 
 ARG RUNTIME_DEPS
 
-# Freshen all base system packages
-RUN pacman --needed --noconfirm -Syuq && yes | pacman -Sccq
-
 # Install run-time dependencies
 RUN pacman --needed --noconfirm -Sq $RUNTIME_DEPS && yes | pacman -Sccq
 
