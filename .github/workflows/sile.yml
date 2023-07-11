@@ -12,7 +12,7 @@ jobs:
         sileVersion: [ "v0.14.8", "v0.14.10" ]
     runs-on: ubuntu-latest
     container:
-      image: docker://siletypesetter/sile:${{ matrix.sileVersion }}
+      image: ghcr.io/sile-typesetter/sile:${{ matrix.sileVersion }}
       options: --entrypoint=bash
     steps:
     - name: Checkout
