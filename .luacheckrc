@@ -1,4 +1,4 @@
-std = "max"
+std = "min+sile"
 include_files = {
   "**/*.lua",
   "*.rockspec",
@@ -11,11 +11,6 @@ exclude_files = {
   ".install"
 }
 globals = {
-  "SILE",
-  "SU",
-  "luautf8",
-  "pl",
-  "fluent",
   "_fpFamily",
   "_fpFeatures",
   "_fpFilename",
