@@ -7,7 +7,7 @@ inputs:
     default: ""
 runs:
   using: docker
-  image: docker://ghcr.io/sile-typesetter/fontproof:v2.0.8
+  image: docker://ghcr.io/sile-typesetter/fontproof:v2.0.9
   args:
     - ${{ inputs.args }}
 branding:
