@@ -50,12 +50,17 @@ local template = opts.template and ("%s%s.sil"):format(templatedir, opts.templat
 local weight = opts.weight and ("-e '_fpWeight=\"%s\"'"):format(opts.weight) or ""
 local args = opts.SILEARGS and table.concat(opts.SILEARGS, " ") or ""
 
-local _, status, signal =
+local ret, status, signal =
    os.execute(table.concat({sile, filename, family, style, weight, size, features, output, args, template}, " "))
 
-if status == "exit" then
+if status == "exit" then -- PUC Lua
    os.exit(signal)
-else
+elseif status == "signal" then -- PUC Lua
    error(("Interrupted with signal %s"):format(signal))
+   os.exit(1)
+elseif type(ret) == "number" then -- LuaJIT
+   os.exit(ret)
+else
+   error("Unknown error encountered trying to run SILE")
    os.exit(1)
 end
