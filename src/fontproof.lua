@@ -3,8 +3,10 @@
 
 local cliargs = require("cliargs")
 
+local sile = os.getenv("SILE") or "sile"
+
 local print_version = function ()
-   os.execute("sile --version")
+   os.execute(sile .." --version")
    local res, loader = pcall(require, "luarocks.loader")
    print("FontProof installed from rockspec " .. (res and loader.context.fontproof or "UNKNOWN"))
    os.exit(0)
@@ -49,7 +51,7 @@ local weight = opts.weight and ("-e '_fpWeight=\"%s\"'"):format(opts.weight) or 
 local args = opts.SILEARGS and table.concat(opts.SILEARGS, " ") or ""
 
 local _, status, signal =
-   os.execute(table.concat({"sile", filename, family, style, weight, size, features, output, args, template}, " "))
+   os.execute(table.concat({sile, filename, family, style, weight, size, features, output, args, template}, " "))
 
 if status == "exit" then
    os.exit(signal)
