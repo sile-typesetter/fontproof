@@ -5,8 +5,8 @@ local cliargs = require("cliargs")
 
 local print_version = function ()
    os.execute("sile --version")
-   local _, loader = pcall(require, "luarocks.loader")
-   print("FontProof installed from rockspec " .. loader.context.fontproof)
+   local res, loader = pcall(require, "luarocks.loader")
+   print("FontProof installed from rockspec " .. (res and loader.context.fontproof or "UNKNOWN"))
    os.exit(0)
 end
 
