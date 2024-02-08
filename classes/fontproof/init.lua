@@ -100,7 +100,9 @@ function class:declareOptions ()
 end
 
 function class:setOptions (options)
-  plain.setOptions(self, options)
+  if not self._initialized then
+    plain.setOptions(self, options)
+  end
   self.options.filename = _fpFilename or options.filename or nil
   self.options.family = _fpFamily or options.family or "Gentium Plus"
   self.options.language = _fpLanguage or options.language or nil
