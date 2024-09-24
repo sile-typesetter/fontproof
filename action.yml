@@ -2,14 +2,16 @@ name: FontProof
 description: A font design testing class for SILE
 inputs:
   args:
-    description: Arguments passed to sile
+    description: Arguments passed to fontproof; defaults to ‘-t test’.
     required: false
-    default: ""
+    default: -t test
 runs:
   using: docker
   image: docker://ghcr.io/sile-typesetter/fontproof:v2.2.0
+  entrypoint: sh
   args:
-    - ${{ inputs.args }}
+    - -c
+    - fontproof ${{ inputs.args }}
 branding:
   icon: book-open
   color: blue
