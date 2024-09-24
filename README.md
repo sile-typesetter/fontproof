@@ -106,7 +106,7 @@ jobs:
     name: FontProof
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: FontProof
         uses: sile-typesetter/fontproof@latest
         with:

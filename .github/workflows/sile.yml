@@ -8,14 +8,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sileVersion: [ "v0.14.17" ]
-    runs-on: ubuntu-latest
+        sileVersion: [ "v0.15.5", "v0.14.17" ]
+    runs-on: ubuntu-22.04
     container:
       image: ghcr.io/sile-typesetter/sile:${{ matrix.sileVersion }}
       options: --entrypoint=bash
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+    # Danger alert! This partial upgrade scenario is explicitly *not* supported
+    # by Arch Linux and *will* break at some point as the container ages. It
+    # isn't needed when testing soon after a SILE release, and eventually will
+    # stop working when any libraries SILE depends on get bumped. But it does
+    # work to extend the life of the CI matrix between those two extreemes.
+    - name: Refresh package database
+      run: pacman --needed --noconfirm -Syq archlinux-keyring
     - name: Install dev dependencies
       run: pacman --noconfirm --needed -S luarocks make words
     - name: Build and install locally
@@ -29,7 +36,7 @@ jobs:
     - name: Run full template
       run: ./lua_modules/bin/fontproof -t full -o full.pdf
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: fp-template-tests.zip
+        name: fp-template-tests-${{ matrix.sileVersion }}.zip
         path: '*.pdf'
