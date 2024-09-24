@@ -16,6 +16,13 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+    # Danger alert! This partial upgrade scenario is explicitly *not* supported
+    # by Arch Linux and *will* break at some point as the container ages. It
+    # isn't needed when testing soon after a SILE release, and eventually will
+    # stop working when any libraries SILE depends on get bumped. But it does
+    # work to extend the life of the CI matrix between those two extreemes.
+    - name: Refresh package database
+      run: pacman --needed --noconfirm -Syq archlinux-keyring
     - name: Install dev dependencies
       run: pacman --noconfirm --needed -S luarocks make words
     - name: Build and install locally
