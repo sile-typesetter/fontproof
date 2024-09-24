@@ -165,7 +165,7 @@ Details on the commands used to specify these are below.
 
 ## Contributing to the project
 
-FontProof is Copyright © 2016-2020 [SIL International](http://www.sil.org) and licensed under the [MIT license](http://en.wikipedia.org/wiki/MIT_License).
+FontProof is Copyright © 2016 [SIL International](http://www.sil.org) and licensed under the [MIT license](http://en.wikipedia.org/wiki/MIT_License).
 BTW - Despite the name similarity, SILE itself is not developed by SIL International, though we like the project very much.
 You're very welcome to contribute to both FontProof and SILE.
 

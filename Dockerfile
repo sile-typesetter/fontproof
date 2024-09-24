@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: © 2016 SIL International
+# SPDX-License-Identifier: MIT
+
 #syntax=docker/dockerfile:1.2
 
 ARG SILETAG

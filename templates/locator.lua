@@ -1,4 +1,4 @@
--- Copyright (C) 2016-2023 SIL International
+-- SPDX-FileCopyrightText: © 2016 SIL International
 -- SPDX-License-Identifier: MIT
 
 -- Help the CLI locate template files wherever LuaRocks stashes them
