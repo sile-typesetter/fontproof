@@ -27,6 +27,10 @@ dependencies = {
    "lua_cliargs == 3.0-2"
 }
 
+deploy = {
+   wrap_bin_scripts = true,
+}
+
 build = {
    type = "builtin",
    modules = {
