@@ -56,7 +56,7 @@ function class:_init (options)
   self:loadPackage("features")
   self:loadPackage("color")
 
-  SILE.settings:set("document.parindent", SILE.nodefactory.glue(0))
+  SILE.settings:set("document.parindent", SILE.types.node.glue(0))
   SILE.settings:set("document.spaceskip")
   return self
 
@@ -134,8 +134,8 @@ function class:endPage ()
   local harfbuzzinfo = ("HarfBuzz %s"):format(hb.version())
   local runheadinfo = ("Fontproof: %s %s - %s - %s - %s - %s"):format(fontinfo, gitcommit, templateinfo, dateinfo, sileinfo, harfbuzzinfo)
   SILE.typesetNaturally(SILE.getFrame("runningHead"), function()
-    SILE.settings:set("document.rskip", SILE.nodefactory.hfillglue())
-    SILE.settings:set("typesetter.parfillskip", SILE.nodefactory.glue(0))
+    SILE.settings:set("document.rskip", SILE.types.node.hfillglue())
+    SILE.settings:set("typesetter.parfillskip", SILE.types.node.glue(0))
     SILE.settings:set("document.spaceskip", SILE.shaper:measureChar(" ").width)
     SILE.call("font", {
         family = _scratch.runhead.family,
