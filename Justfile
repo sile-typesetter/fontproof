@@ -20,8 +20,7 @@ release semver: pristine
 	git add action.yml README.md rockspecs/fontproof-{{semver}}-1.rockspec
 	git commit -m "chore: Release {{semver}}"
 	git tag v{{semver}}
-	git push upstream v{{semver}}
-	git push upstream master
+	git push --atomic upstream master v{{semver}}
 	luarocks pack rockspecs/fontproof-{{semver}}-1.rockspec
 	gh release create v{{semver}} -t "FontProof v{{semver}}" fontproof-{{semver}}-1.src.rock
 
