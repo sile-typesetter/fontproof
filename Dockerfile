@@ -21,8 +21,9 @@ ARG RUNTIME_DEPS
 RUN pacman --needed --noconfirm -Sq $RUNTIME_DEPS && yes | pacman -Sccq
 
 # Setup LuaRocks for use with LuaJIT roughly matching SILE's internal VM
-RUN luarocks --lua-version 5.1 config lua_interpreter luajit && \
-    luarocks --lua-version 5.1 config variables.LUA "$(command -v luajit)"
+RUN luarocks config lua_version 5.1 && \
+    luarocks config lua_interpreter luajit && \
+    luarocks config variables.LUA "$(command -v luajit)"
 
 # Set at build time, forces Docker’s layer caching to reset at this point
 ARG REVISION
@@ -31,7 +32,7 @@ ARG VERSION
 # Install fontproof in SILE container
 COPY ./ /src
 WORKDIR /src
-RUN luarocks --lua-version 5.1 make fontproof-dev-1.rockspec
+RUN luarocks make fontproof-dev-1.rockspec
 
 LABEL org.opencontainers.image.title="FontProof"
 LABEL org.opencontainers.image.description="A containerized version of FontProof"
