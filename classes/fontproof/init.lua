@@ -33,11 +33,6 @@ end
 
 function class:_init (options)
 
-   -- Dodge deprecation notices until we drop v0.14 support
-   if SILE.types then
-      SILE.nodefactory = SILE.types.node
-   end
-
    _scratch = {
       runhead = {},
       section = {},
@@ -153,10 +148,7 @@ function class:endPage ()
       fontinfo = fontinfo .. (" %s"):format(self.options.script)
    end
    local gitcommit = getGitCommit()
-   local function inputFilename ()
-      return SILE.input.filename and SILE.input.filename or SILE.input.filenames[1]
-   end
-   local templateinfo = ("%s"):format(inputFilename())
+   local templateinfo = ("%s"):format(SILE.input.filenames[1])
    local dateinfo = os.date("%A %d %b %Y %X %z %Z")
    local sileinfo = ("SILE %s"):format(SILE.version)
    local harfbuzzinfo = ("HarfBuzz %s"):format(hb.version())
