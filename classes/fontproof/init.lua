@@ -33,6 +33,11 @@ end
 
 function class:_init (options)
 
+  -- Dodge deprecation notices until we drop v0.14 support
+  if SILE.types then
+    SILE.nodefactory = SILE.types.node
+  end
+
   _scratch = {
     runhead = {},
     section = {},
