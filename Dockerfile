@@ -20,11 +20,6 @@ ARG RUNTIME_DEPS
 # Install run-time dependencies
 RUN pacman --needed --noconfirm -Sq $RUNTIME_DEPS && yes | pacman -Sccq
 
-# Setup LuaRocks for use with LuaJIT roughly matching SILE's internal VM
-RUN luarocks config lua_version 5.1 && \
-    luarocks config lua_interpreter luajit && \
-    luarocks config variables.LUA "$(command -v luajit)"
-
 # Set at build time, forces Docker’s layer caching to reset at this point
 ARG REVISION
 ARG VERSION
