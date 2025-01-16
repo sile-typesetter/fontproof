@@ -276,7 +276,7 @@ function package:registerCommands ()
             end
          end
       end
-      local width = SILE.measurement("100%fw"):absolute() / columns
+      local width = SILE.types.measurement("100%fw"):absolute() / columns
       local fontoptions = self.class:_fpOptions({ size = charsize })
       local done = 0
       while done < #glyphs do
