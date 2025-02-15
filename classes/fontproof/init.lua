@@ -32,7 +32,6 @@ local function getGitCommit ()
 end
 
 function class:_init (options)
-
    _scratch = {
       runhead = {},
       section = {},
