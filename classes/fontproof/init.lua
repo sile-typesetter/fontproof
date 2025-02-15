@@ -32,10 +32,6 @@ local function getGitCommit ()
 end
 
 function class:_init (options)
-   -- Dodge deprecation notices until we drop v0.14 support
-   if SILE.types then
-      SILE.nodefactory = SILE.types.node
-   end
 
    _scratch = {
       runhead = {},
@@ -60,7 +56,7 @@ function class:_init (options)
    self:loadPackage("features")
    self:loadPackage("color")
 
-   SILE.settings:set("document.parindent", SILE.nodefactory.glue(0))
+   SILE.settings:set("document.parindent", SILE.types.node.glue(0))
    SILE.settings:set("document.spaceskip")
    return self
 end
@@ -152,10 +148,7 @@ function class:endPage ()
       fontinfo = fontinfo .. (" %s"):format(self.options.script)
    end
    local gitcommit = getGitCommit()
-   local function inputFilename ()
-      return SILE.input.filename and SILE.input.filename or SILE.input.filenames[1]
-   end
-   local templateinfo = ("%s"):format(inputFilename())
+   local templateinfo = ("%s"):format(SILE.input.filenames[1])
    local dateinfo = os.date("%A %d %b %Y %X %z %Z")
    local sileinfo = ("SILE %s"):format(SILE.version)
    local harfbuzzinfo = ("HarfBuzz %s"):format(hb.version())
@@ -168,8 +161,8 @@ function class:endPage ()
       harfbuzzinfo
    )
    SILE.typesetNaturally(SILE.getFrame("runningHead"), function ()
-      SILE.settings:set("document.rskip", SILE.nodefactory.hfillglue())
-      SILE.settings:set("typesetter.parfillskip", SILE.nodefactory.glue(0))
+      SILE.settings:set("document.rskip", SILE.types.node.hfillglue())
+      SILE.settings:set("typesetter.parfillskip", SILE.types.node.glue(0))
       SILE.settings:set("document.spaceskip", SILE.shaper:measureChar(" ").width)
       SILE.call("font", {
          family = _scratch.runhead.family,

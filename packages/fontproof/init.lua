@@ -296,7 +296,7 @@ function package:registerCommands ()
                      SILE.typesetter:typeset(header:sub(1, hexDigits))
                   end)
                   local nbox = SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes]
-                  local centeringglue = SILE.nodefactory.glue((width - nbox.width) / 2)
+                  local centeringglue = SILE.types.node.glue((width - nbox.width) / 2)
                   SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes] = centeringglue
                   SILE.typesetter:pushHorizontal(nbox)
                   SILE.typesetter:pushGlue(centeringglue)
@@ -314,7 +314,7 @@ function package:registerCommands ()
                      local char = glyphs[ix + 1].uni
                      if glyphs[ix + 1].present then
                         local left = SILE.shaper:measureChar(char).width
-                        local centeringglue = SILE.nodefactory.glue((width - left) / 2)
+                        local centeringglue = SILE.types.node.glue((width - left) / 2)
                         SILE.typesetter:pushGlue(centeringglue)
                         SILE.typesetter:typeset(char)
                         SILE.typesetter:pushGlue(centeringglue)
@@ -335,7 +335,7 @@ function package:registerCommands ()
                         SILE.typesetter:typeset(string.format("%04X", glyphs[ix + 1].cp))
                      end)
                      local nbox = SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes]
-                     local centeringglue = SILE.nodefactory.glue((width - nbox.width) / 2)
+                     local centeringglue = SILE.types.node.glue((width - nbox.width) / 2)
                      SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes] = centeringglue
                      SILE.typesetter:pushHorizontal(nbox)
                      SILE.typesetter:pushGlue(centeringglue)
