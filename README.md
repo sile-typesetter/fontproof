@@ -16,7 +16,7 @@ _Note that FontProof is very much a work-in-progress, so there's a lot that does
 FontProof requires [The SILE Typesetter](https://sile-typesetter.org).
 You'll need to [install SILE](https://github.com/sile-typesetter/sile/#download-and-installation) according to that package's instructions.
 
-_Note that SILE is changing rapidly. The current class was developed for and tested with release 0.14.0 or newer._
+_Note that SILE is changing rapidly. The current class was developed for and tested with release 0.15.0 or newer._
 For support of older versions of SILE see older versions of FontProof.
 
 Installation of FontProof is primarily done through Lua Rocks:
@@ -25,7 +25,7 @@ Installation of FontProof is primarily done through Lua Rocks:
 $ luarocks install fontproof
 ```
 
-A working installation of SILE v0.14.0 or newer is assumed but not checked at installation time.
+A working installation of SILE v0.15.0 or newer is required but not checked at installation time.
 
 You may also install from manually from the source directory:
 
